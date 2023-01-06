@@ -1,5 +1,6 @@
 package com.mycompany.rn.project;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 
@@ -14,6 +15,11 @@ public class Form extends javax.swing.JFrame {
      */
     public Form() {
         initComponents();
+        ButtonInitTraining.setEnabled(false);
+        ButtonChoseFile2.setEnabled(false);
+        ButtonInitTest.setEnabled(false);
+        RadioButtonLogistic.setSelected(true);
+        RadioButtonMaxError.setSelected(true);
     }
 
     /**
@@ -27,45 +33,49 @@ public class Form extends javax.swing.JFrame {
 
         buttonGroupFunction = new javax.swing.ButtonGroup();
         buttonGroupParada = new javax.swing.ButtonGroup();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        Panel = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
         ButtonChoseFile = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        LabelFileName = new javax.swing.JLabel();
         ButtonInitTraining = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        jLabel20 = new javax.swing.JLabel();
+        LabelAttributesAmount = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        LabelClassAmount = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        RadioButtonTH = new javax.swing.JRadioButton();
+        RadioButtonMaxError = new javax.swing.JRadioButton();
+        RadioButtonNumberIterations = new javax.swing.JRadioButton();
         TextFieldMaxError = new javax.swing.JTextField();
         TextFieldNumberOfIterations = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
         ButtonChoseFile2 = new javax.swing.JButton();
-        jLabel10 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        ButtonInitTraining1 = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Table = new javax.swing.JTable();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        ButtonInitTest = new javax.swing.JButton();
+        LabelFileName2 = new javax.swing.JLabel();
+        TextFieldOcultLayer = new javax.swing.JTextField();
+        RadioButtonLogistic = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Rede Neural");
         setBackground(new java.awt.Color(255, 255, 255));
-        setResizable(false);
+        setMinimumSize(new java.awt.Dimension(453, 600));
+        setPreferredSize(new java.awt.Dimension(453, 556));
+        setSize(new java.awt.Dimension(453, 600));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(450, 547));
+        Panel.setBackground(new java.awt.Color(255, 255, 255));
+        Panel.setPreferredSize(new java.awt.Dimension(453, 556));
 
-        jLabel1.setText("Escolha o arquivo de treinamento");
+        jLabel19.setText("Escolha o arquivo de treinamento");
 
         ButtonChoseFile.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile.setText("Escolher Arquivo");
+        ButtonChoseFile.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile.setBorderPainted(false);
         ButtonChoseFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile.setPreferredSize(null);
@@ -75,12 +85,13 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel2.setText("Nome do arquivo . extesão");
+        LabelFileName.setForeground(new java.awt.Color(255, 0, 0));
+        LabelFileName.setText("Nome do arquivo . extesão");
 
         ButtonInitTraining.setBackground(new java.awt.Color(51, 51, 255));
         ButtonInitTraining.setForeground(new java.awt.Color(255, 255, 255));
         ButtonInitTraining.setText("Iniciar treinamento");
+        ButtonInitTraining.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonInitTraining.setBorderPainted(false);
         ButtonInitTraining.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonInitTraining.setPreferredSize(null);
@@ -90,43 +101,42 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Número de neurônios na camada de entrada");
+        jLabel20.setText("Número de neurônios na camada de entrada");
 
-        jLabel4.setText("0");
+        LabelAttributesAmount.setText("0");
 
-        jLabel5.setText("Número de neurônios na camada de saída");
+        jLabel21.setText("Número de neurônios na camada de saída");
 
-        jLabel6.setText("0");
+        LabelClassAmount.setText("0");
 
-        jLabel7.setText("Número de neurônios na camada oculta");
+        jLabel22.setText("Número de neurônios na camada oculta");
 
-        jLabel8.setText("0");
-
-        jRadioButton1.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroupFunction.add(jRadioButton1);
-        jRadioButton1.setText("Tangente hiperbólica");
-
-        jRadioButton2.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroupFunction.add(jRadioButton2);
-        jRadioButton2.setText("Logística");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        RadioButtonTH.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroupFunction.add(RadioButtonTH);
+        RadioButtonTH.setText("Tangente hiperbólica");
+        RadioButtonTH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                RadioButtonTHActionPerformed(evt);
             }
         });
 
-        jRadioButton3.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroupParada.add(jRadioButton3);
-        jRadioButton3.setText("Erro máximo");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        RadioButtonMaxError.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroupParada.add(RadioButtonMaxError);
+        RadioButtonMaxError.setText("Erro máximo");
+        RadioButtonMaxError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                RadioButtonMaxErrorActionPerformed(evt);
             }
         });
 
-        jRadioButton4.setBackground(new java.awt.Color(255, 255, 255));
-        buttonGroupParada.add(jRadioButton4);
-        jRadioButton4.setText("Número de iterações");
+        RadioButtonNumberIterations.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroupParada.add(RadioButtonNumberIterations);
+        RadioButtonNumberIterations.setText("Número de iterações");
+        RadioButtonNumberIterations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RadioButtonNumberIterationsActionPerformed(evt);
+            }
+        });
 
         TextFieldMaxError.setText("0.1");
 
@@ -137,11 +147,12 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setText("Escolha o arquivo de teste");
+        jLabel23.setText("Escolha o arquivo de teste");
 
         ButtonChoseFile2.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile2.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile2.setText("Escolher Arquivo");
+        ButtonChoseFile2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile2.setBorderPainted(false);
         ButtonChoseFile2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile2.setPreferredSize(null);
@@ -151,9 +162,9 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setText("Matriz de confusão: ");
+        jLabel24.setText("Matriz de confusão: ");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"0", "0", "0", "0", "0"},
                 {"0", "0", "0", "0", "0"},
@@ -173,141 +184,145 @@ public class Form extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
-        jTable1.setRowHeight(15);
-        jTable1.setSelectionBackground(new java.awt.Color(51, 51, 255));
-        jTable1.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setViewportView(jTable1);
+        Table.setGridColor(new java.awt.Color(255, 255, 255));
+        Table.setRowHeight(15);
+        Table.setSelectionBackground(new java.awt.Color(51, 51, 255));
+        Table.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane3.setViewportView(Table);
 
-        jLabel11.setText("Desejado");
+        jLabel25.setText("Desejado");
 
-        jLabel12.setText("Obtido");
+        jLabel26.setText("Obtido");
 
-        ButtonInitTraining1.setBackground(new java.awt.Color(255, 0, 0));
-        ButtonInitTraining1.setForeground(new java.awt.Color(255, 255, 255));
-        ButtonInitTraining1.setText("Testar");
-        ButtonInitTraining1.setBorderPainted(false);
-        ButtonInitTraining1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        ButtonInitTraining1.setPreferredSize(null);
-        ButtonInitTraining1.addActionListener(new java.awt.event.ActionListener() {
+        ButtonInitTest.setBackground(new java.awt.Color(255, 0, 0));
+        ButtonInitTest.setForeground(new java.awt.Color(255, 255, 255));
+        ButtonInitTest.setText("Testar");
+        ButtonInitTest.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ButtonInitTest.setBorderPainted(false);
+        ButtonInitTest.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ButtonInitTest.setPreferredSize(null);
+        ButtonInitTest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ButtonInitTraining1ActionPerformed(evt);
+                ButtonInitTestActionPerformed(evt);
             }
         });
 
-        jLabel13.setForeground(new java.awt.Color(255, 0, 0));
-        jLabel13.setText("Nome do arquivo . extesão");
+        LabelFileName2.setForeground(new java.awt.Color(255, 0, 0));
+        LabelFileName2.setText("Nome do arquivo . extesão");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+        RadioButtonLogistic.setBackground(new java.awt.Color(255, 255, 255));
+        buttonGroupFunction.add(RadioButtonLogistic);
+        RadioButtonLogistic.setText("Logistica");
+
+        javax.swing.GroupLayout PanelLayout = new javax.swing.GroupLayout(Panel);
+        Panel.setLayout(PanelLayout);
+        PanelLayout.setHorizontalGroup(
+            PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(PanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelLayout.createSequentialGroup()
+                        .addContainerGap(35, Short.MAX_VALUE)
+                        .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ButtonInitTraining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jRadioButton3)
-                                            .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jRadioButton2))
-                                        .addGap(125, 125, 125)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jRadioButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jRadioButton4))))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(LabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LabelFileName2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ButtonInitTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(PanelLayout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(TextFieldOcultLayer, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
+                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel24)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel23)
+                                    .addGroup(PanelLayout.createSequentialGroup()
                                         .addGap(28, 28, 28)
-                                        .addComponent(jLabel12)
+                                        .addComponent(jLabel26)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel7))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(107, 107, 107)
-                                .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ButtonInitTraining1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(35, 35, 35))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel21))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(LabelClassAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(LabelAttributesAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(PanelLayout.createSequentialGroup()
+                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(RadioButtonMaxError)
+                                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(RadioButtonLogistic))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(RadioButtonTH, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(RadioButtonNumberIterations)))))))
+                .addContainerGap(35, Short.MAX_VALUE))
+            .addGroup(PanelLayout.createSequentialGroup()
                 .addGap(174, 174, 174)
-                .addComponent(jLabel11)
+                .addComponent(jLabel25)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
+        PanelLayout.setVerticalGroup(
+            PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelLayout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel19)
                     .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(LabelFileName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(LabelAttributesAmount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(LabelClassAmount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel7))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(TextFieldOcultLayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RadioButtonTH)
+                    .addComponent(RadioButtonLogistic))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RadioButtonMaxError)
+                    .addComponent(RadioButtonNumberIterations))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(ButtonInitTraining, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
                     .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel13)
+                .addComponent(LabelFileName2)
                 .addGap(18, 18, 18)
-                .addComponent(ButtonInitTraining1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ButtonInitTest, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelLayout.createSequentialGroup()
                         .addGap(22, 22, 22)
-                        .addComponent(jLabel11)
+                        .addComponent(jLabel25)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
+                        .addComponent(jLabel24)
                         .addGap(88, 88, 88)
-                        .addComponent(jLabel12)
+                        .addComponent(jLabel26)
                         .addGap(42, 42, 42))))
         );
 
@@ -315,13 +330,13 @@ public class Form extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, 559, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         pack();
@@ -330,16 +345,24 @@ public class Form extends javax.swing.JFrame {
     private void ButtonChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChoseFileActionPerformed
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        
+
         int returnVal = fc.showOpenDialog(this);
-        
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            //This is where a real application would open the file.
-               System.out.print(file.getName());
+            String fileName = file.getName();
+            String filePath = file.getPath();
+            LabelFileName.setText(fileName);
+
+            NeuralNetwork NN = ReaderCSV.reader(filePath);
+
+            LabelAttributesAmount.setText(String.valueOf(NN.getAttributesAmount()));
+            LabelClassAmount.setText(String.valueOf(NN.getClassAmount()));
+
         } else {
             System.out.println("Open command cancelled by user.");
         }
+
     }//GEN-LAST:event_ButtonChoseFileActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
@@ -352,13 +375,13 @@ public class Form extends javax.swing.JFrame {
 
     private void ButtonChoseFile2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChoseFile2ActionPerformed
         final JFileChooser fc = new JFileChooser();
-        
+
         int returnVal = fc.showOpenDialog(this);
-        
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             //This is where a real application would open the file.
-               System.out.print(file.getName());
+            System.out.print(file.getName());
         } else {
             System.out.println("Open command cancelled by user.");
         }
@@ -369,12 +392,28 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_TextFieldNumberOfIterationsActionPerformed
 
     private void ButtonInitTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTrainingActionPerformed
-        
+
     }//GEN-LAST:event_ButtonInitTrainingActionPerformed
 
     private void ButtonInitTraining1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTraining1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ButtonInitTraining1ActionPerformed
+
+    private void RadioButtonTHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioButtonTHActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RadioButtonTHActionPerformed
+
+    private void RadioButtonNumberIterationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioButtonNumberIterationsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RadioButtonNumberIterationsActionPerformed
+
+    private void RadioButtonMaxErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioButtonMaxErrorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RadioButtonMaxErrorActionPerformed
+
+    private void ButtonInitTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTestActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ButtonInitTestActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,31 +453,31 @@ public class Form extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonChoseFile;
     private javax.swing.JButton ButtonChoseFile2;
+    private javax.swing.JButton ButtonInitTest;
     private javax.swing.JButton ButtonInitTraining;
-    private javax.swing.JButton ButtonInitTraining1;
+    private javax.swing.JLabel LabelAttributesAmount;
+    private javax.swing.JLabel LabelClassAmount;
+    private javax.swing.JLabel LabelFileName;
+    private javax.swing.JLabel LabelFileName2;
+    private javax.swing.JPanel Panel;
+    private javax.swing.JRadioButton RadioButtonLogistic;
+    private javax.swing.JRadioButton RadioButtonMaxError;
+    private javax.swing.JRadioButton RadioButtonNumberIterations;
+    private javax.swing.JRadioButton RadioButtonTH;
+    private javax.swing.JTable Table;
     private javax.swing.JTextField TextFieldMaxError;
     private javax.swing.JTextField TextFieldNumberOfIterations;
+    private javax.swing.JTextField TextFieldOcultLayer;
     private javax.swing.ButtonGroup buttonGroupFunction;
     private javax.swing.ButtonGroup buttonGroupParada;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }
