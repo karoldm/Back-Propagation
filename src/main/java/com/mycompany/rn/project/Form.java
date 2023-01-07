@@ -13,6 +13,7 @@ public class Form extends javax.swing.JFrame {
     /**
      * Creates new form Form
      */
+    NeuralNetwork NN;
     public Form() {
         initComponents();
         ButtonInitTraining.setEnabled(false);
@@ -20,6 +21,7 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTest.setEnabled(false);
         RadioButtonLogistic.setSelected(true);
         RadioButtonMaxError.setSelected(true);
+        NN = null;
     }
 
     /**
@@ -354,10 +356,13 @@ public class Form extends javax.swing.JFrame {
             String filePath = file.getPath();
             LabelFileName.setText(fileName);
 
-            NeuralNetwork NN = ReaderCSV.reader(filePath);
+             NN = ReaderCSV.reader(filePath);
 
             LabelAttributesAmount.setText(String.valueOf(NN.getAttributesAmount()));
             LabelClassAmount.setText(String.valueOf(NN.getClassAmount()));
+            TextFieldOcultLayer.setText(String.valueOf(NN.calculateNeuronsOcultLayer()));
+            
+            ButtonInitTraining.setEnabled(true);
 
         } else {
             System.out.println("Open command cancelled by user.");
@@ -392,7 +397,30 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_TextFieldNumberOfIterationsActionPerformed
 
     private void ButtonInitTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTrainingActionPerformed
-
+        //definindo neuronios da camada oculta
+        int neuronsOcultLayer = Integer.parseInt(TextFieldOcultLayer.getText());
+        NN.setNeuronsOcultLayer(neuronsOcultLayer);
+        
+        //definindo função que será usada
+        if(RadioButtonLogistic.isSelected()) {
+            NN.setFunction(0);
+        }
+        else {
+            NN.setFunction(1);
+        }
+        
+        //definindo condição de parada
+        if(RadioButtonMaxError.isSelected()) {
+            NN.setStop(0);
+            NN.setStopNumber(Integer.parseInt(TextFieldMaxError.getText()));
+        }
+        else {
+            NN.setStop(1);
+            NN.setStopNumber(Integer.parseInt(TextFieldNumberOfIterations.getText()));
+        }
+        
+        //Iniciando treinamento
+        NN.initTraining();
     }//GEN-LAST:event_ButtonInitTrainingActionPerformed
 
     private void ButtonInitTraining1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTraining1ActionPerformed
