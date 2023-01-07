@@ -1,7 +1,6 @@
 package com.mycompany.rn.project;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  *
@@ -118,53 +117,22 @@ public class NeuralNetwork {
         if (stop == 0 && error < stopNumber) { //maxError
             return false;
         }
-        if (stop == 1 && iterations >= stopNumber) { //iterations
-            return false;
-        }
-        return true;
+        return !(stop == 1 && iterations >= stopNumber);
     }
 
     public void initTraining() {
-        ArrayList<Neuron> neuronsOcult = new ArrayList<>();
-        ArrayList<Neuron> neuronsOutput = new ArrayList<>();
-        ArrayList<Double> outputsNeuronsOcult = new ArrayList<>();
-        ArrayList<Double> outputsNeuronsOutput = new ArrayList<>();
-        ArrayList<Double> errorsOutputLayer = new ArrayList<>();
-        ArrayList<Double> errorsOcultLayer = new ArrayList<>();
-        double errorOutputLayer;
-        double errorOcultLayer;
-
-        //iniciando neuronios da camada oculta
-        //cada neuronio da camada oculta possui attributesAmount pesos já que a
-        //rede é totalmente concectada
-        //os pesos são escolhidos aleatóriamente entre -0.001 e 0.001
-        ArrayList<Double> weights = new ArrayList<>();
-
-        for (int i = 0; i < neuronsOcultLayer; i++) {
-            weights.clear();
-            for (int j = 0; j < attributesAmount; j++) {
-                double weight = Math.random() * (0.001 - (-0.001)) + (-0.001);
-                weights.add(weight);
-            }
-            neuronsOcult.add(new Neuron(weights, function));
-        }
+        
+        OcultLayer ocultLayer = new OcultLayer(neuronsOcultLayer, attributesAmount, function);
 
         //iniciando neuronios da camada de saída
-        for (int i = 0; i < classAmount; i++) {
-            weights.clear();
-            for (int j = 0; j < neuronsOcultLayer; j++) {
-                double weight = Math.random() * (0.001 - (-0.001)) + (-0.001);
-                weights.add(weight);
-            }
-            neuronsOutput.add(new Neuron(weights, function));
-        }
+        OutputLayer outputLayer = new OutputLayer(classAmount, neuronsOcultLayer, function);
 
-        //Entrada de dados
+        //Separando entrada de dados
         ArrayList<Integer> classeDesejada = new ArrayList<>();
         ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
 
         for (int i = 0; i < matrixAttributes.size(); i++) {
-            
+
             inputs.add(new ArrayList<>());
 
             //Selecionando a classe desejada 
@@ -184,119 +152,23 @@ public class NeuralNetwork {
 
             //para cada linha de atributos
             for (int i = 0; i < inputs.size(); i++) {
-                outputsNeuronsOcult.clear();
-                outputsNeuronsOutput.clear();
 
-                //para cada neuronio da camada oculta
-                for (int j = 0; j < neuronsOcult.size(); j++) {
-                    Neuron neuron = neuronsOcult.get(j);
-                    //inserindo entradas
-                    neuron.setInputs(inputs.get(i));
-                    //calculando saida de cada neuronio da camada oculta
-                    outputsNeuronsOcult.add(neuron.getOutput());
-                }
+                //calculando saidas dos neuronios da camada oculta 
+                ocultLayer.setInputs(inputs.get(i));
 
-                //calcular saidas dos neuronios da camada de saída 
-                for (int k = 0; k < neuronsOutput.size(); k++) {
-                    Neuron neuron = neuronsOcult.get(k);
+                //calculando saidas dos neuronios da camada de saída 
+                outputLayer.setInputs(inputs.get(i));
 
-                    //a entrada dos neurônios de saída é a saída dos neurônios da camada oculta
-                    neuron.setInputs(outputsNeuronsOcult);
+                //calculando erros e atualizando pesos dos neuronios da camada de saída
+                outputLayer.updateWeights(classeDesejada.get(i), learningRate);
 
-                    //calculando saida de cada neuronio da camada de saída
-                    outputsNeuronsOutput.add(neuron.getOutput());
-
-                }
-
-                //calculando erros dos neuronios da camada de saída
-                errorsOutputLayer.clear();
-
-                //para cada neuronio na camada de saida
-                for (int l = 0; l < outputsNeuronsOutput.size(); l++) {
-                    //erro
-                    errorOutputLayer
-                            = ((l + 1 == classeDesejada.get(i)
-                            ? classeDesejada.get(i) : 0)
-                            - (outputsNeuronsOutput.get(l)));
-
-                    if (this.function == 0) { //logistic
-                        errorOutputLayer *= (outputsNeuronsOutput.get(l) * (1 - outputsNeuronsOutput.get(l)));
-                    } else { //hyperbolic tangent
-                        errorOutputLayer *= (1 - Math.pow(outputsNeuronsOutput.get(l), 2));
-                    }
-                    
-                    errorsOutputLayer.add(errorOutputLayer);
-                }
-
-                //calculando erros dos neuronios da camada oculta
-                errorsOcultLayer.clear();
-
-                //para cada neuronio na camada oculta
-                for (int l = 0; l < outputsNeuronsOcult.size(); l++) {
-                    //erro
-                    double sumErrorOutputLayer = 0;
-
-                    for (int n = 0; n < neuronsOutput.size(); n++) {
-                        Neuron neuron = neuronsOutput.get(n);
-                        sumErrorOutputLayer += errorsOutputLayer.get(n) * neuron.getWeights().get(n);
-                    }
-
-                    if (this.function == 0) { //logistic
-                        errorOcultLayer
-                                = sumErrorOutputLayer * (outputsNeuronsOcult.get(l)
-                                * (1 - outputsNeuronsOcult.get(l)));
-                    } else { //hyperbolic tangent
-                        errorOcultLayer
-                                = sumErrorOutputLayer * (1 - Math.pow(outputsNeuronsOcult.get(l), 2));
-                    }
-
-                    errorsOcultLayer.add(errorOcultLayer);
-                }
-
-                //atualizando pesos da camada de saída
-                for (int x = 0; x < neuronsOutput.size(); x++) {
-                    Neuron neuron = neuronsOutput.get(x);
-                    ArrayList<Double> currentWeights = neuron.getWeights();
-
-                    ArrayList<Double> newWeights = new ArrayList<>();
-                    double newWeight;
-                    for (int y = 0; y < currentWeights.size(); y++) {
-                        newWeight = currentWeights.get(y)
-                                + (learningRate * errorsOutputLayer.get(x)
-                                * outputsNeuronsOcult.get(y));
-
-                        newWeights.add(newWeight);
-                    }
-
-                    neuron.setWeights(newWeights);
-                }
-
-                //atualizando pesos da camada oculta
-                for (int x = 0; x < neuronsOcult.size(); x++) {
-                    Neuron neuron = neuronsOcult.get(x);
-                    ArrayList<Double> currentWeights = neuron.getWeights();
-
-                    ArrayList<Double> newWeights = new ArrayList<>();
-                    double newWeight;
-                    for (int y = 0; y < currentWeights.size(); y++) {
-                        newWeight = currentWeights.get(y)
-                                + (learningRate * errorsOcultLayer.get(x)
-                                * inputs.get(i).get(y));
-
-                        newWeights.add(newWeight);
-                    }
-
-                    neuron.setWeights(newWeights);
-                }
+                //calculando erros e atualizando pesos dos neuronios da camada oculta
+                ocultLayer.updateWeights(learningRate, inputs.get(i));
             }
 
             //calcular erro da rede
-            double sumError = 0;
-
-            for (int z = 0; z < errorsOutputLayer.size(); z++) {
-                sumError += Math.pow(errorsOutputLayer.get(z), 2);
-            }
-            error = 0.5 * sumError;
+            error = outputLayer.getNetworkError();
+            //incrementando iterações
             iterations++;
         }
 
