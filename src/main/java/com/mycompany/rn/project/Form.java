@@ -61,6 +61,8 @@ public class Form extends javax.swing.JFrame {
         LabelFileName2 = new javax.swing.JLabel();
         TextFieldOcultLayer = new javax.swing.JTextField();
         RadioButtonLogistic = new javax.swing.JRadioButton();
+        jLabel1 = new javax.swing.JLabel();
+        TextFieldLearningRate = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rede Neural");
@@ -216,6 +218,10 @@ public class Form extends javax.swing.JFrame {
         buttonGroupFunction.add(RadioButtonLogistic);
         RadioButtonLogistic.setText("Logistica");
 
+        jLabel1.setText("Taxa de aprendizado");
+
+        TextFieldLearningRate.setText("0.1");
+
         javax.swing.GroupLayout PanelLayout = new javax.swing.GroupLayout(Panel);
         Panel.setLayout(PanelLayout);
         PanelLayout.setHorizontalGroup(
@@ -224,9 +230,10 @@ public class Form extends javax.swing.JFrame {
                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(PanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelLayout.createSequentialGroup()
-                        .addContainerGap(35, Short.MAX_VALUE)
+                        .addGap(56, 56, 56)
                         .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ButtonInitTraining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(LabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -248,23 +255,28 @@ public class Form extends javax.swing.JFrame {
                                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel20)
                                     .addComponent(jLabel21))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(LabelClassAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(LabelAttributesAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(PanelLayout.createSequentialGroup()
                                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RadioButtonMaxError)
-                                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(RadioButtonLogistic))
+                                    .addComponent(RadioButtonLogistic)
+                                    .addComponent(RadioButtonTH))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RadioButtonTH, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(RadioButtonNumberIterations)))))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                                    .addComponent(RadioButtonNumberIterations)
+                                    .addComponent(RadioButtonMaxError))
+                                .addGap(32, 32, 32)
+                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
+                                    .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
+                            .addGroup(PanelLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(TextFieldLearningRate)))))
+                .addContainerGap())
             .addGroup(PanelLayout.createSequentialGroup()
                 .addGap(174, 174, 174)
                 .addComponent(jLabel25)
@@ -273,7 +285,7 @@ public class Form extends javax.swing.JFrame {
         PanelLayout.setVerticalGroup(
             PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel19)
                     .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -293,16 +305,18 @@ public class Form extends javax.swing.JFrame {
                     .addComponent(TextFieldOcultLayer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(RadioButtonTH)
-                    .addComponent(RadioButtonLogistic))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RadioButtonLogistic)
                     .addComponent(RadioButtonMaxError)
-                    .addComponent(RadioButtonNumberIterations))
+                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RadioButtonTH)
+                    .addComponent(RadioButtonNumberIterations)
                     .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(TextFieldLearningRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(ButtonInitTraining, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -412,12 +426,14 @@ public class Form extends javax.swing.JFrame {
         //definindo condição de parada
         if(RadioButtonMaxError.isSelected()) {
             NN.setStop(0);
-            NN.setStopNumber(Integer.parseInt(TextFieldMaxError.getText()));
+            NN.setStopNumber(Double.parseDouble(TextFieldMaxError.getText()));
         }
         else {
             NN.setStop(1);
             NN.setStopNumber(Integer.parseInt(TextFieldNumberOfIterations.getText()));
         }
+        
+        NN.setLearningRate(Double.parseDouble(TextFieldLearningRate.getText()));
         
         //Iniciando treinamento
         NN.initTraining();
@@ -493,11 +509,13 @@ public class Form extends javax.swing.JFrame {
     private javax.swing.JRadioButton RadioButtonNumberIterations;
     private javax.swing.JRadioButton RadioButtonTH;
     private javax.swing.JTable Table;
+    private javax.swing.JTextField TextFieldLearningRate;
     private javax.swing.JTextField TextFieldMaxError;
     private javax.swing.JTextField TextFieldNumberOfIterations;
     private javax.swing.JTextField TextFieldOcultLayer;
     private javax.swing.ButtonGroup buttonGroupFunction;
     private javax.swing.ButtonGroup buttonGroupParada;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;

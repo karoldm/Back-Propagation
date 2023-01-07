@@ -15,7 +15,7 @@ public class NeuralNetwork {
     private final ArrayList<ArrayList<Integer>> matrixAttributes;
     private int function; //0 = logistic and 1 = hyperbolic tangent
     private int stop; //0 = max error and 1 = number of iterations
-    private float stopNumber;
+    private double stopNumber;
     private double learningRate;
 
     public NeuralNetwork() {
@@ -37,11 +37,11 @@ public class NeuralNetwork {
         this.learningRate = learningRate;
     }
 
-    public float getStopNumber() {
+    public double getStopNumber() {
         return stopNumber;
     }
 
-    public void setStopNumber(float stopNumber) {
+    public void setStopNumber(double stopNumber) {
         this.stopNumber = stopNumber;
     }
 
