@@ -17,7 +17,7 @@ public class OcultLayer extends Layer {
         double error;
 
         //para cada neuronio na camada oculta
-        for (int l = 0; l < outputs.size(); l++) {
+        for (int i= 0; i < outputs.size(); i++) {
             //erro
             double sumErrorOutputLayer = 0;
 
@@ -28,27 +28,27 @@ public class OcultLayer extends Layer {
 
             if (this.function == 0) { //logistic
                 error
-                        = sumErrorOutputLayer * (outputs.get(l)
-                        * (1 - outputs.get(l)));
+                        = sumErrorOutputLayer * (outputs.get(i)
+                        * (1 - outputs.get(i)));
             } else { //hyperbolic tangent
                 error
-                        = sumErrorOutputLayer * (1 - Math.pow(outputs.get(l), 2));
+                        = sumErrorOutputLayer * (1 - Math.pow(outputs.get(i), 2));
             }
 
             errors.add(error);
         }
 
         //atualizando pesos da camada oculta
-        for (int x = 0; x < neurons.size(); x++) {
-            Neuron neuron = neurons.get(x);
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
             ArrayList<Double> currentWeights = neuron.getWeights();
 
             ArrayList<Double> newWeights = new ArrayList<>();
             double newWeight;
-            for (int y = 0; y < currentWeights.size(); y++) {
-                newWeight = currentWeights.get(y)
-                        + (learningRate * errors.get(x)
-                        * input.get(y));
+            for (int j = 0; j < currentWeights.size(); j++) {
+                newWeight = currentWeights.get(j)
+                        + (learningRate * errors.get(i)
+                        * input.get(j));
 
                 newWeights.add(newWeight);
             }

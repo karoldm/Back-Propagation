@@ -16,33 +16,33 @@ public class OutputLayer extends Layer {
         errors.clear();
         double error;
         //para cada neuronio na camada
-        for (int l = 0; l < neuronsAmount; l++) {
+        for (int i = 0; i < neuronsAmount; i++) {
             //erro
             error
-                    = ((l + 1 == classeDesejada
+                    = ((i + 1 == classeDesejada
                             ? classeDesejada : 0)
-                    - (outputs.get(l)));
+                    - (outputs.get(i)));
 
             if (this.function == 0) { //logistic
-                error *= (outputs.get(l) * (1 - outputs.get(l)));
+                error *= (outputs.get(i) * (1 - outputs.get(i)));
             } else { //hyperbolic tangent
-                error *= (1 - Math.pow(outputs.get(l), 2));
+                error *= (1 - Math.pow(outputs.get(i), 2));
             }
 
             errors.add(error);
         }
 
         //atualizando pesos da camada de saída
-        for (int x = 0; x < neurons.size(); x++) {
-            Neuron neuron = neurons.get(x);
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
             ArrayList<Double> currentWeights = neuron.getWeights();
 
             ArrayList<Double> newWeights = new ArrayList<>();
             double newWeight;
-            for (int y = 0; y < currentWeights.size(); y++) {
-                newWeight = currentWeights.get(y)
-                        + (learningRate * errors.get(x)
-                        * outputs.get(y));
+            for (int j = 0; j < currentWeights.size(); j++) {
+                newWeight = currentWeights.get(j)
+                        + (learningRate * errors.get(i)
+                        * outputs.get(j));
 
                 newWeights.add(newWeight);
             }

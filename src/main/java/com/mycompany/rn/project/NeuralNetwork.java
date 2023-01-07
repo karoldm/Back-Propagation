@@ -97,13 +97,13 @@ public class NeuralNetwork {
 
         int sizeRow = row.size();
 
-        int class1 = row.get(sizeRow - 1);
+        int classe = row.get(sizeRow - 1);
 
         for (ArrayList<Integer> rowInterator : matrixAttributes) {
-            if (class1 != rowInterator.get(sizeRow - 1)) {
+            if (classe != rowInterator.get(sizeRow - 1)) {
                 sum++;
             }
-            class1 = rowInterator.get(sizeRow - 1);
+            classe = rowInterator.get(sizeRow - 1);
         }
 
         setClassAmount(sum);
@@ -121,7 +121,7 @@ public class NeuralNetwork {
     }
 
     public void initTraining() {
-        
+
         OcultLayer ocultLayer = new OcultLayer(neuronsOcultLayer, attributesAmount, function);
 
         //iniciando neuronios da camada de saída

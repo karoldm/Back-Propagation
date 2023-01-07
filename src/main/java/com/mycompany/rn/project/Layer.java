@@ -65,8 +65,8 @@ public class Layer {
     }
 
     public void setInputs(ArrayList<Double> inputs) {
-        for (int j = 0; j < neurons.size(); j++) {
-            Neuron neuron = neurons.get(j);
+        for (int i = 0; i < neurons.size(); i++) {
+            Neuron neuron = neurons.get(i);
             //inserindo entradas
             neuron.setInputs(inputs);
             //calculando saida de cada neuronio da camada oculta
