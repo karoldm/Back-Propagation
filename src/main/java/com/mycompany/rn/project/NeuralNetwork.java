@@ -10,22 +10,46 @@ public class NeuralNetwork {
 
     private int classAmount;
     private int attributesAmount;
-    private int neuronsOcultLayer;
-    private final ArrayList<ArrayList<Integer>> matrixAttributes;
+    private int neuronsOcultLayerAmount;
+    private final ArrayList<ArrayList<Double>> matrixAttributes;
     private int function; //0 = logistic and 1 = hyperbolic tangent
     private int stop; //0 = max error and 1 = number of iterations
     private double stopNumber;
     private double learningRate;
+    private OcultLayer ocultLayer;
+    private OutputLayer outputLayer;
 
-    public NeuralNetwork() {
-        this.matrixAttributes = new ArrayList<>();
+    public NeuralNetwork(ArrayList<ArrayList<Double>> matrixAttributes) {
+        this.matrixAttributes = matrixAttributes;
         this.classAmount = 0;
-        this.attributesAmount = 0;
-        this.neuronsOcultLayer = 0;
+        this.neuronsOcultLayerAmount = 0;
         this.function = 0;
         this.stop = 0;
         this.stopNumber = 0;
         this.learningRate = 0.1;
+        this.ocultLayer = null;
+        this.outputLayer = null;
+
+        this.attributesAmount = matrixAttributes.get(0).size() - 1;
+
+        int sum = 0;
+
+        int sizeMatrix = matrixAttributes.size();
+
+        ArrayList<Double> row = matrixAttributes.get(sizeMatrix - 1);
+
+        int sizeRow = row.size();
+
+        double classe = row.get(sizeRow - 1);
+
+        for (ArrayList<Double> rowInterator : matrixAttributes) {
+            if (classe != rowInterator.get(sizeRow - 1)) {
+                sum++;
+            }
+            classe = rowInterator.get(sizeRow - 1);
+        }
+
+        setClassAmount(sum);
     }
 
     public double getLearningRate() {
@@ -76,37 +100,12 @@ public class NeuralNetwork {
         this.attributesAmount = attributesAmount;
     }
 
-    public int getNeuronsOcultLayer() {
-        return neuronsOcultLayer;
+    public int getNeuronsOcultLayerAmount() {
+        return neuronsOcultLayerAmount;
     }
 
-    public void setNeuronsOcultLayer(int neuronsOcultLayer) {
-        this.neuronsOcultLayer = neuronsOcultLayer;
-    }
-
-    public void addAttributeRow(ArrayList<Integer> row) {
-        matrixAttributes.add(row);
-    }
-
-    public void calculateClassAmount() {
-        int sum = 0;
-
-        int sizeMatrix = matrixAttributes.size();
-
-        ArrayList<Integer> row = matrixAttributes.get(sizeMatrix - 1);
-
-        int sizeRow = row.size();
-
-        int classe = row.get(sizeRow - 1);
-
-        for (ArrayList<Integer> rowInterator : matrixAttributes) {
-            if (classe != rowInterator.get(sizeRow - 1)) {
-                sum++;
-            }
-            classe = rowInterator.get(sizeRow - 1);
-        }
-
-        setClassAmount(sum);
+    public void setNeuronsOcultLayerAmount(int neuronsOcultLayerAmount) {
+        this.neuronsOcultLayerAmount = neuronsOcultLayerAmount;
     }
 
     public int calculateNeuronsOcultLayer() {
@@ -122,13 +121,13 @@ public class NeuralNetwork {
 
     public void initTraining() {
 
-        OcultLayer ocultLayer = new OcultLayer(neuronsOcultLayer, attributesAmount, function);
+        this.ocultLayer = new OcultLayer(neuronsOcultLayerAmount, attributesAmount, function);
 
         //iniciando neuronios da camada de saída
-        OutputLayer outputLayer = new OutputLayer(classAmount, neuronsOcultLayer, function);
+        this.outputLayer = new OutputLayer(classAmount, neuronsOcultLayerAmount, function);
 
         //Separando entrada de dados
-        ArrayList<Integer> classeDesejada = new ArrayList<>();
+        ArrayList<Double> classeDesejada = new ArrayList<>();
         ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
 
         for (int i = 0; i < matrixAttributes.size(); i++) {
@@ -136,10 +135,10 @@ public class NeuralNetwork {
             inputs.add(new ArrayList<>());
 
             //Selecionando a classe desejada 
-            ArrayList<Integer> row = matrixAttributes.get(i);
+            ArrayList<Double> row = matrixAttributes.get(i);
             classeDesejada.add(row.get(attributesAmount - 1));
 
-            for (int j = 0; j < row.size() - 2; j++) {
+            for (int j = 0; j < row.size() - 1; j++) {
                 inputs.get(i).add((double) row.get(j));
             }
 
@@ -157,13 +156,13 @@ public class NeuralNetwork {
                 ocultLayer.setInputs(inputs.get(i));
 
                 //calculando saidas dos neuronios da camada de saída 
-                outputLayer.setInputs(inputs.get(i));
+                outputLayer.setInputs(ocultLayer.getOutputs());
 
                 //calculando erros e atualizando pesos dos neuronios da camada de saída
                 outputLayer.updateWeights(classeDesejada.get(i), learningRate);
 
                 //calculando erros e atualizando pesos dos neuronios da camada oculta
-                ocultLayer.updateWeights(learningRate, inputs.get(i));
+                ocultLayer.updateWeights(learningRate, inputs.get(i), outputLayer.getErrors());
             }
 
             //calcular erro da rede

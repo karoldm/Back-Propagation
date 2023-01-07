@@ -16,7 +16,7 @@ public class Neuron {
         this.weights = weights;
         this.function = function;
     }
- 
+
     public ArrayList<Double> getWeights() {
         return weights;
     }
@@ -28,11 +28,12 @@ public class Neuron {
     public double getOutput() {
         //Calcular net
         double net = 0;
+
         for (int i = 0; i < inputs.size(); i++) {
             net += inputs.get(i) * weights.get(i);
         }
         //Aplicar função de transferência
-        double output = 0;
+        double output;
         if (function == 0) { //logistic
             output = 1 / (1 + Math.pow(Math.E, -net));
         } else { //hyperbolic tangent 
@@ -45,5 +46,5 @@ public class Neuron {
     public void setInputs(ArrayList<Double> inputs) {
         this.inputs = inputs;
     }
-    
+
 }

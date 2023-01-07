@@ -12,7 +12,7 @@ public class OutputLayer extends Layer {
         super(neuronsAmount, weightsAmount, function);
     }
 
-    public void updateWeights(int classeDesejada, double learningRate) {
+    public void updateWeights(double classeDesejada, double learningRate) {
         errors.clear();
         double error;
         //para cada neuronio na camada
@@ -39,6 +39,7 @@ public class OutputLayer extends Layer {
 
             ArrayList<Double> newWeights = new ArrayList<>();
             double newWeight;
+            
             for (int j = 0; j < currentWeights.size(); j++) {
                 newWeight = currentWeights.get(j)
                         + (learningRate * errors.get(i)

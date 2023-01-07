@@ -12,7 +12,7 @@ public class OcultLayer extends Layer {
         super(neuronsAmount, weightsAmount, function);
     }
 
-    public void updateWeights(double learningRate, ArrayList<Double> input) {
+    public void updateWeights(double learningRate, ArrayList<Double> input, ArrayList<Double> errorsOutputLayer) {
         errors.clear();
         double error;
 
@@ -21,9 +21,9 @@ public class OcultLayer extends Layer {
             //erro
             double sumErrorOutputLayer = 0;
 
-            for (int n = 0; n < neurons.size(); n++) {
-                Neuron neuron = neurons.get(n);
-                sumErrorOutputLayer += errors.get(n) * neuron.getWeights().get(n);
+            for (int j = 0; j < neurons.size(); j++) {
+                Neuron neuron = neurons.get(j);
+                sumErrorOutputLayer += errorsOutputLayer.get(j) * neuron.getWeights().get(j);
             }
 
             if (this.function == 0) { //logistic

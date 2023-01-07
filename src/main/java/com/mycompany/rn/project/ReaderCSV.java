@@ -15,31 +15,26 @@ public class ReaderCSV {
     private static String linha = "";
     private static BufferedReader br = null;
 
-    public static NeuralNetwork reader(String path) {
-        int classAmount = 0, attributesAmount = 0;
-        NeuralNetwork NN = new NeuralNetwork();
-
+    public static ArrayList<ArrayList<Double>> reader(String path) {
+       ArrayList<ArrayList<Double>> matrixAttributes = new ArrayList<>();
+        
         try {
 
             br = new BufferedReader(new FileReader(path));
 
             linha = br.readLine();
-            attributesAmount = linha.split(",").length - 1;
-            NN.setAttributesAmount(attributesAmount);
 
             while ((linha = br.readLine()) != null) {
 
                 String[] linhaSplit = linha.split(",");
-                ArrayList<Integer> row = new ArrayList<>();
+                ArrayList<Double> row = new ArrayList<>();
 
                 for (String str : linhaSplit) {
-                    row.add(Integer.parseInt(str));
+                    row.add(Double.valueOf(str));
                 }
 
-                NN.addAttributeRow(row);
+                matrixAttributes.add(row);
             }
-            
-            NN.calculateClassAmount();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -55,7 +50,7 @@ public class ReaderCSV {
             }
         }
 
-        return NN;
+        return matrixAttributes;
     }
 
 }

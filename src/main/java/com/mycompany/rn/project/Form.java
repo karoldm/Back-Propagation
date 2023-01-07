@@ -1,7 +1,7 @@
 package com.mycompany.rn.project;
 
-import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 
 /**
@@ -14,6 +14,8 @@ public class Form extends javax.swing.JFrame {
      * Creates new form Form
      */
     NeuralNetwork NN;
+    ArrayList<ArrayList<Double>> matrixAttributesTest; 
+
     public Form() {
         initComponents();
         ButtonInitTraining.setEnabled(false);
@@ -22,6 +24,7 @@ public class Form extends javax.swing.JFrame {
         RadioButtonLogistic.setSelected(true);
         RadioButtonMaxError.setSelected(true);
         NN = null;
+        matrixAttributesTest = new ArrayList<>();
     }
 
     /**
@@ -233,7 +236,7 @@ public class Form extends javax.swing.JFrame {
                         .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelLayout.createSequentialGroup()
-                        .addGap(56, 56, 56)
+                        .addGap(35, 35, 35)
                         .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ButtonInitTraining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(LabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -255,7 +258,7 @@ public class Form extends javax.swing.JFrame {
                                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel20)
                                     .addComponent(jLabel21))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                                 .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(LabelClassAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -276,7 +279,7 @@ public class Form extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
                                 .addComponent(TextFieldLearningRate)))))
-                .addContainerGap())
+                .addGap(35, 35, 35))
             .addGroup(PanelLayout.createSequentialGroup()
                 .addGap(174, 174, 174)
                 .addComponent(jLabel25)
@@ -346,7 +349,7 @@ public class Form extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,12 +373,14 @@ public class Form extends javax.swing.JFrame {
             String filePath = file.getPath();
             LabelFileName.setText(fileName);
 
-             NN = ReaderCSV.reader(filePath);
+            ArrayList<ArrayList<Double>> matrixAttributes = ReaderCSV.reader(filePath);
+
+            NN = new NeuralNetwork(matrixAttributes);
 
             LabelAttributesAmount.setText(String.valueOf(NN.getAttributesAmount()));
             LabelClassAmount.setText(String.valueOf(NN.getClassAmount()));
             TextFieldOcultLayer.setText(String.valueOf(NN.calculateNeuronsOcultLayer()));
-            
+
             ButtonInitTraining.setEnabled(true);
 
         } else {
@@ -393,14 +398,21 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void ButtonChoseFile2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonChoseFile2ActionPerformed
+        //Create a file chooser
         final JFileChooser fc = new JFileChooser();
 
         int returnVal = fc.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.print(file.getName());
+            String fileName = file.getName();
+            String filePath = file.getPath();
+            LabelFileName.setText(fileName);
+
+            matrixAttributesTest = ReaderCSV.reader(filePath);
+
+            ButtonInitTest.setEnabled(true);
+
         } else {
             System.out.println("Open command cancelled by user.");
         }
@@ -413,30 +425,31 @@ public class Form extends javax.swing.JFrame {
     private void ButtonInitTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTrainingActionPerformed
         //definindo neuronios da camada oculta
         int neuronsOcultLayer = Integer.parseInt(TextFieldOcultLayer.getText());
-        NN.setNeuronsOcultLayer(neuronsOcultLayer);
-        
+        NN.setNeuronsOcultLayerAmount(neuronsOcultLayer);
+
         //definindo função que será usada
-        if(RadioButtonLogistic.isSelected()) {
+        if (RadioButtonLogistic.isSelected()) {
             NN.setFunction(0);
-        }
-        else {
+        } else {
             NN.setFunction(1);
         }
-        
+
         //definindo condição de parada
-        if(RadioButtonMaxError.isSelected()) {
+        if (RadioButtonMaxError.isSelected()) {
             NN.setStop(0);
             NN.setStopNumber(Double.parseDouble(TextFieldMaxError.getText()));
-        }
-        else {
+        } else {
             NN.setStop(1);
             NN.setStopNumber(Integer.parseInt(TextFieldNumberOfIterations.getText()));
         }
-        
+
         NN.setLearningRate(Double.parseDouble(TextFieldLearningRate.getText()));
-        
+
         //Iniciando treinamento
         NN.initTraining();
+
+        //Quanto o treinamento estiver completo habilitamos os botões para teste
+        ButtonChoseFile2.setEnabled(true);
     }//GEN-LAST:event_ButtonInitTrainingActionPerformed
 
     private void ButtonInitTraining1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTraining1ActionPerformed
@@ -456,7 +469,7 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_RadioButtonMaxErrorActionPerformed
 
     private void ButtonInitTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTestActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_ButtonInitTestActionPerformed
 
     /**

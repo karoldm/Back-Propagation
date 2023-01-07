@@ -18,7 +18,10 @@ public class Layer {
     public Layer(int neuronsAmount, int weightsAmount, int function) {
         this.errors = new ArrayList<>();
         this.function = function;
-        
+        this.neurons = new ArrayList<>();
+        this.errors = new ArrayList<>();
+        this.outputs = new ArrayList<>();
+
         this.neuronsAmount = neuronsAmount;
 
         //iniciando neuronios 
@@ -65,6 +68,7 @@ public class Layer {
     }
 
     public void setInputs(ArrayList<Double> inputs) {
+        outputs.clear();
         for (int i = 0; i < neurons.size(); i++) {
             Neuron neuron = neurons.get(i);
             //inserindo entradas
