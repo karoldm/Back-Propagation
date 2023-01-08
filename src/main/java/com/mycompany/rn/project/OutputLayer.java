@@ -11,39 +11,53 @@ public class OutputLayer extends Layer {
     public OutputLayer(int neuronsAmount, int weightsAmount, int function) {
         super(neuronsAmount, weightsAmount, function);
     }
-
-    public void updateWeights(double classeDesejada, double learningRate) {
-        errors.clear();
+    
+    public void calcErrors(double classeDesejada){
+         errors = new ArrayList<>();
         double error;
         //para cada neuronio na camada
         for (int i = 0; i < neuronsAmount; i++) {
             //erro
-            error
-                    = ((i + 1 == classeDesejada
-                            ? classeDesejada : 0)
-                    - (outputs.get(i)));
+            
+            double desejado = 0;
+            if(classeDesejada == i+1 && function == 0){
+                desejado = 1;
+            }
+            else if(classeDesejada != i+1 && function == 0){
+                desejado = 0;
+            }
+            if(classeDesejada == i+1 && function == 0){
+                desejado = 1;
+            }
+            else if(classeDesejada != i+1 && function == 0){
+                desejado = -1;
+            }
+            
+            error = desejado - outputs.get(i);
 
             if (this.function == 0) { //logistic
                 error *= (outputs.get(i) * (1 - outputs.get(i)));
             } else { //hyperbolic tangent
-                error *= (1 - Math.pow(outputs.get(i), 2));
+                error *= (1 - (outputs.get(i) * outputs.get(i)));
             }
 
             errors.add(error);
         }
+    }
 
+    public void updateWeights(double learningRate, ArrayList<Double> outputOcultLayer) {
         //atualizando pesos da camada de saída
-        for (int i = 0; i < neurons.size(); i++) {
-            Neuron neuron = neurons.get(i);
+        for (int i = 0; i < this.neurons.size(); i++) {
+            Neuron neuron = this.neurons.get(i);
             ArrayList<Double> currentWeights = neuron.getWeights();
 
             ArrayList<Double> newWeights = new ArrayList<>();
             double newWeight;
-            
+
             for (int j = 0; j < currentWeights.size(); j++) {
                 newWeight = currentWeights.get(j)
-                        + (learningRate * errors.get(i)
-                        * outputs.get(j));
+                        + (learningRate * this.errors.get(i)
+                        * outputOcultLayer.get(j));
 
                 newWeights.add(newWeight);
             }
@@ -55,8 +69,8 @@ public class OutputLayer extends Layer {
 
     public double getNetworkError() {
         double sumError = 0;
-        for (int z = 0; z < errors.size(); z++) {
-            sumError += Math.pow(errors.get(z), 2);
+        for (int i = 0; i < errors.size(); i++) {
+            sumError += errors.get(i) * errors.get(i);
         }
         return (0.5 * sumError);
     }

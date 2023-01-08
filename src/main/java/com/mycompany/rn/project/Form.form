@@ -69,67 +69,59 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="ButtonInitTraining" max="32767" attributes="0"/>
+                      <Component id="LabelFileName" alignment="0" max="32767" attributes="0"/>
+                      <Component id="LabelFileName2" alignment="1" max="32767" attributes="0"/>
+                      <Component id="ButtonInitTest" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ButtonChoseFile" min="-2" pref="125" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                          <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="TextFieldOcultLayer" min="-2" pref="60" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ButtonInitTraining" max="32767" attributes="0"/>
-                              <Component id="LabelFileName" alignment="0" max="32767" attributes="0"/>
-                              <Component id="LabelFileName2" alignment="1" max="32767" attributes="0"/>
-                              <Component id="ButtonInitTest" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="TextFieldOcultLayer" min="-2" pref="60" max="-2" attributes="0"/>
+                              <Component id="jLabel24" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel19" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane3" min="-2" pref="175" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jLabel24" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel19" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                          <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="jScrollPane3" min="-2" pref="175" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="jLabel20" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel21" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace pref="28" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ButtonChoseFile2" alignment="1" min="-2" pref="125" max="-2" attributes="0"/>
-                                      <Component id="LabelClassAmount" alignment="1" min="-2" pref="24" max="-2" attributes="0"/>
-                                      <Component id="LabelAttributesAmount" alignment="1" min="-2" pref="24" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="RadioButtonLogistic" min="-2" max="-2" attributes="0"/>
-                                      <Component id="RadioButtonTH" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="RadioButtonNumberIterations" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="RadioButtonMaxError" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="TextFieldMaxError" pref="60" max="32767" attributes="0"/>
-                                      <Component id="TextFieldNumberOfIterations" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="TextFieldLearningRate" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="jLabel20" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel21" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace pref="28" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="ButtonChoseFile2" alignment="1" min="-2" pref="125" max="-2" attributes="0"/>
+                              <Component id="LabelClassAmount" alignment="1" min="-2" pref="24" max="-2" attributes="0"/>
+                              <Component id="LabelAttributesAmount" alignment="1" min="-2" pref="24" max="-2" attributes="0"/>
+                              <Component id="ButtonChoseFile" alignment="1" min="-2" pref="125" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="RadioButtonLogistic" min="-2" max="-2" attributes="0"/>
+                              <Component id="RadioButtonTH" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="RadioButtonNumberIterations" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="RadioButtonMaxError" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="TextFieldMaxError" pref="60" max="32767" attributes="0"/>
+                              <Component id="TextFieldNumberOfIterations" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="TextFieldLearningRate" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
@@ -145,9 +137,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace pref="17" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
-                      <Component id="ButtonChoseFile" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jLabel19" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="ButtonChoseFile" alignment="1" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="LabelFileName" min="-2" max="-2" attributes="0"/>
@@ -349,8 +341,11 @@
         </Component>
         <Component class="javax.swing.JTextField" name="TextFieldMaxError">
           <Properties>
-            <Property name="text" type="java.lang.String" value="0.1"/>
+            <Property name="text" type="java.lang.String" value="0.001"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TextFieldMaxErrorActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="TextFieldNumberOfIterations">
           <Properties>
@@ -522,8 +517,11 @@
         </Component>
         <Component class="javax.swing.JTextField" name="TextFieldLearningRate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="0.1"/>
+            <Property name="text" type="java.lang.String" value="0.35"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TextFieldLearningRateActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

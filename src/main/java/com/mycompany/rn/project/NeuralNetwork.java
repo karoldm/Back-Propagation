@@ -26,7 +26,7 @@ public class NeuralNetwork {
         this.function = 0;
         this.stop = 0;
         this.stopNumber = 0;
-        this.learningRate = 0.1;
+        this.learningRate = 1;
         this.ocultLayer = null;
         this.outputLayer = null;
 
@@ -116,11 +116,14 @@ public class NeuralNetwork {
         if (stop == 0 && error < stopNumber) { //maxError
             return false;
         }
-        return !(stop == 1 && iterations >= stopNumber);
+        if (stop == 1 && iterations >= stopNumber) {
+            return false;
+        }
+        return true;
     }
 
     public void initTraining() {
-
+        //iniciando neuronios da camada oculta
         this.ocultLayer = new OcultLayer(neuronsOcultLayerAmount, attributesAmount, function);
 
         //iniciando neuronios da camada de saída
@@ -136,12 +139,11 @@ public class NeuralNetwork {
 
             //Selecionando a classe desejada 
             ArrayList<Double> row = matrixAttributes.get(i);
-            classeDesejada.add(row.get(attributesAmount - 1));
+            classeDesejada.add(row.get(attributesAmount));
 
             for (int j = 0; j < row.size() - 1; j++) {
                 inputs.get(i).add((double) row.get(j));
             }
-
         }
 
         //inputs[i] contém X1 X2 X3 X4 ... e classeDesejada[i] contém CLASSE
@@ -158,11 +160,17 @@ public class NeuralNetwork {
                 //calculando saidas dos neuronios da camada de saída 
                 outputLayer.setInputs(ocultLayer.getOutputs());
 
+                //Calculando erro dos neuronios da camada de saída
+                outputLayer.calcErrors(classeDesejada.get(i));
+                
+                //Calculando erro dos neuronios da camada oculta
+                ocultLayer.calcErrors(outputLayer.getNeurons(), outputLayer.getErrors());
+                
                 //calculando erros e atualizando pesos dos neuronios da camada de saída
-                outputLayer.updateWeights(classeDesejada.get(i), learningRate);
+                outputLayer.updateWeights(learningRate, ocultLayer.getOutputs());
 
                 //calculando erros e atualizando pesos dos neuronios da camada oculta
-                ocultLayer.updateWeights(learningRate, inputs.get(i), outputLayer.getErrors());
+                ocultLayer.updateWeights(learningRate, inputs.get(i));
             }
 
             //calcular erro da rede
@@ -171,6 +179,62 @@ public class NeuralNetwork {
             iterations++;
         }
 
+    }
+
+    public int[][] test(ArrayList<ArrayList<Double>> matrixAttributesTest) {
+
+        //Separando entrada de dados
+        ArrayList<Integer> classeDesejada = new ArrayList<>();
+        ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
+
+        int[][] confusionMatrix = new int[classAmount][classAmount];
+
+        //inicializando matriz de confusão
+        for (int i = 0; i < classAmount; i++) {
+            for (int j = 0; j < classAmount; j++) {
+                confusionMatrix[i][j] = 0;
+            }
+        }
+
+        for (int i = 0; i < matrixAttributesTest.size(); i++) {
+
+            inputs.add(new ArrayList<>());
+
+            //Selecionando a classe desejada 
+            ArrayList<Double> row = matrixAttributesTest.get(i);
+            classeDesejada.add((int) Math.round(row.get(attributesAmount)));
+
+            for (int j = 0; j < row.size() - 1; j++) {
+                inputs.get(i).add((double) row.get(j));
+            }
+        }
+
+        //inputs[i] contém X1 X2 X3 X4 ... e classeDesejada[i] contém CLASSE
+        //para cada linha de atributos
+        for (int i = 0; i < inputs.size(); i++) {
+
+            //calculando saidas dos neuronios da camada oculta 
+            ocultLayer.setInputs(inputs.get(i));
+      
+            //calculando saidas dos neuronios da camada de saída 
+            outputLayer.setInputs(ocultLayer.getOutputs());
+            
+            //Se outputs = [0.3 0.8 0.1 -0.1 0.05 0.5] classe = 2
+            ArrayList<Double> outputs = outputLayer.getOutputs();
+            
+            double maxValue = outputs.get(0);
+            int maxIndex = 0;
+            for (int j = 0; j < outputs.size(); j++) {
+                if(outputs.get(j).isNaN()) System.out.println("Linha " + inputs.get(i));
+                if (outputs.get(j) > maxValue) {
+                    maxValue = outputs.get(j);
+                    maxIndex = j;
+                }
+            }
+            confusionMatrix[maxIndex][classeDesejada.get(i)-1] += 1;
+        }
+
+        return confusionMatrix;
     }
 
 }

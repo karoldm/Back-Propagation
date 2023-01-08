@@ -30,17 +30,21 @@ public class Layer {
         ArrayList<Double> weights = new ArrayList<>();
 
         for (int i = 0; i < neuronsAmount; i++) {
-            weights.clear();
+            weights = new ArrayList<>();
+            
             for (int j = 0; j < weightsAmount; j++) {
-                double weight = Math.random() * (0.001 - (-0.001)) + (-0.001);
+                double weight = Math.random() * (1 - (-1)) + (-1);
                 weights.add(weight);
             }
-            neurons.add(new Neuron(weights, function));
+            
+            Neuron newNeuron = new Neuron(weights, function);
+            neurons.add(newNeuron);
         }
+         
     }
 
     public ArrayList<Neuron> getNeurons() {
-        return neurons;
+        return this.neurons;
     }
 
     public void setNeurons(ArrayList<Neuron> neurons) {
@@ -48,7 +52,7 @@ public class Layer {
     }
 
     public ArrayList<Double> getOutputs() {
-        return outputs;
+        return this.outputs;
     }
 
     public void setOutputs(ArrayList<Double> outputs) {
@@ -56,7 +60,7 @@ public class Layer {
     }
 
     public ArrayList<Double> getErrors() {
-        return errors;
+        return this.errors;
     }
 
     public void setErrors(ArrayList<Double> erros) {
@@ -64,22 +68,24 @@ public class Layer {
     }
 
     public ArrayList<Double> getInputs() {
-        return inputs;
+        return this.inputs;
     }
 
     public void setInputs(ArrayList<Double> inputs) {
-        outputs.clear();
-        for (int i = 0; i < neurons.size(); i++) {
-            Neuron neuron = neurons.get(i);
+        this.outputs = new ArrayList<>();
+        for (int i = 0; i < this.neurons.size(); i++) {
+            Neuron neuron = this.neurons.get(i);
+            
             //inserindo entradas
             neuron.setInputs(inputs);
+            
             //calculando saida de cada neuronio da camada oculta
-            outputs.add(neuron.getOutput());
+            this.outputs.add(neuron.getOutput());
         }
     }
 
     public int getNeuronsAmount() {
-        return neuronsAmount;
+        return this.neuronsAmount;
     }
 
     public void setNeuronsAmount(int neuronsAmount) {

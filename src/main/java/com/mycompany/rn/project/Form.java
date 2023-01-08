@@ -3,6 +3,7 @@ package com.mycompany.rn.project;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,7 +15,7 @@ public class Form extends javax.swing.JFrame {
      * Creates new form Form
      */
     NeuralNetwork NN;
-    ArrayList<ArrayList<Double>> matrixAttributesTest; 
+    ArrayList<ArrayList<Double>> matrixAttributesTest;
 
     public Form() {
         initComponents();
@@ -145,7 +146,12 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        TextFieldMaxError.setText("0.1");
+        TextFieldMaxError.setText("0.001");
+        TextFieldMaxError.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldMaxErrorActionPerformed(evt);
+            }
+        });
 
         TextFieldNumberOfIterations.setText("500");
         TextFieldNumberOfIterations.addActionListener(new java.awt.event.ActionListener() {
@@ -223,62 +229,62 @@ public class Form extends javax.swing.JFrame {
 
         jLabel1.setText("Taxa de aprendizado");
 
-        TextFieldLearningRate.setText("0.1");
+        TextFieldLearningRate.setText("0.35");
+        TextFieldLearningRate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldLearningRateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PanelLayout = new javax.swing.GroupLayout(Panel);
         Panel.setLayout(PanelLayout);
         PanelLayout.setHorizontalGroup(
             PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
-                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(35, 35, 35)
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ButtonInitTraining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelFileName2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ButtonInitTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(PanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(TextFieldOcultLayer, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
                         .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ButtonInitTraining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(LabelFileName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(LabelFileName2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ButtonInitTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel23)
                             .addGroup(PanelLayout.createSequentialGroup()
-                                .addComponent(jLabel22)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(TextFieldOcultLayer, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLayout.createSequentialGroup()
-                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel24)
-                                    .addComponent(jLabel19)
-                                    .addComponent(jLabel23)
-                                    .addGroup(PanelLayout.createSequentialGroup()
-                                        .addGap(28, 28, 28)
-                                        .addComponent(jLabel26)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel21))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(LabelClassAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(LabelAttributesAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(PanelLayout.createSequentialGroup()
-                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RadioButtonLogistic)
-                                    .addComponent(RadioButtonTH))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RadioButtonNumberIterations)
-                                    .addComponent(RadioButtonMaxError))
-                                .addGap(32, 32, 32)
-                                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
-                                    .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
-                            .addGroup(PanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(TextFieldLearningRate)))))
+                                .addGap(28, 28, 28)
+                                .addComponent(jLabel26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ButtonChoseFile2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LabelClassAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(LabelAttributesAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ButtonChoseFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(PanelLayout.createSequentialGroup()
+                        .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(RadioButtonLogistic)
+                            .addComponent(RadioButtonTH))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(RadioButtonNumberIterations)
+                            .addComponent(RadioButtonMaxError))
+                        .addGap(32, 32, 32)
+                        .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextFieldMaxError, javax.swing.GroupLayout.PREFERRED_SIZE, 60, Short.MAX_VALUE)
+                            .addComponent(TextFieldNumberOfIterations, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
+                    .addGroup(PanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(TextFieldLearningRate)))
                 .addGap(35, 35, 35))
             .addGroup(PanelLayout.createSequentialGroup()
                 .addGap(174, 174, 174)
@@ -289,9 +295,9 @@ public class Form extends javax.swing.JFrame {
             PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelLayout.createSequentialGroup()
                 .addContainerGap(17, Short.MAX_VALUE)
-                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel19)
-                    .addComponent(ButtonChoseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ButtonChoseFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(LabelFileName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -407,7 +413,7 @@ public class Form extends javax.swing.JFrame {
             File file = fc.getSelectedFile();
             String fileName = file.getName();
             String filePath = file.getPath();
-            LabelFileName.setText(fileName);
+            LabelFileName2.setText(fileName);
 
             matrixAttributesTest = ReaderCSV.reader(filePath);
 
@@ -469,8 +475,29 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_RadioButtonMaxErrorActionPerformed
 
     private void ButtonInitTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTestActionPerformed
+        int[][] confusionMatrix = NN.test(matrixAttributesTest);
+
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        for(int i = 0; i < confusionMatrix.length; i++){
+            model.removeRow(0);
+        }
         
+        for(int i = 0; i < confusionMatrix.length; i++){
+            Object[] row = new Object[confusionMatrix.length];
+            for(int j = 0; j < confusionMatrix.length; j++){
+                row[j] = (Object)confusionMatrix[i][j];
+            }
+            model.addRow(row);
+        }
     }//GEN-LAST:event_ButtonInitTestActionPerformed
+
+    private void TextFieldLearningRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldLearningRateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldLearningRateActionPerformed
+
+    private void TextFieldMaxErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldMaxErrorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldMaxErrorActionPerformed
 
     /**
      * @param args the command line arguments
