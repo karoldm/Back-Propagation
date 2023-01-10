@@ -5,15 +5,18 @@ import java.util.ArrayList;
 /**
  *
  * @author karol
+ * Classe para representar uma camada de neuronios 
+ * Toda camada possui um array de neuronios, as entradas e as saídas de cada neurônio
+ * e os erros calculados de cada neuronio 
  */
 public class Layer {
 
-    protected ArrayList<Neuron> neurons;
-    protected ArrayList<Double> outputs;
-    protected ArrayList<Double> errors;
-    protected ArrayList<Double> inputs;
-    protected int neuronsAmount;
-    protected int function;
+    protected ArrayList<Neuron> neurons; //array de neuronios
+    protected ArrayList<Double> outputs; //array com as saídas calculadas de cada neuronio
+    protected ArrayList<Double> errors; //array com os erros calculadas de cada neuronio
+    protected ArrayList<Double> inputs; //array com as entradas de cada neuronio
+    protected int neuronsAmount; //quantidade de neuronios
+    protected int function; //função usada nos neuronios, onde 0 = logistica e 1 = tangente hiperbolica
 
     public Layer(int neuronsAmount, int weightsAmount, int function) {
         this.errors = new ArrayList<>();
@@ -26,7 +29,7 @@ public class Layer {
 
         //iniciando neuronios 
         //cada neuronio da camada possui weightsAmount pesos 
-        //os pesos são escolhidos aleatóriamente entre -0.001 e 0.001
+        //os pesos são escolhidos aleatóriamente entre -1 e 1
         ArrayList<Double> weights = new ArrayList<>();
 
         for (int i = 0; i < neuronsAmount; i++) {
@@ -71,15 +74,19 @@ public class Layer {
         return this.inputs;
     }
 
+    //O método setInputs recebe as entradas de cada neuronio, calcula os nets e aplica a função de transferencia
+    //gerando uma saída para cada neuronio armazenadas no array outputs
     public void setInputs(ArrayList<Double> inputs) {
         this.outputs = new ArrayList<>();
+        
+        //para cada neuronio da camada 
         for (int i = 0; i < this.neurons.size(); i++) {
             Neuron neuron = this.neurons.get(i);
             
             //inserindo entradas
             neuron.setInputs(inputs);
             
-            //calculando saida de cada neuronio da camada oculta
+            //calculando saida de cada neuronio da camada 
             this.outputs.add(neuron.getOutput());
         }
     }

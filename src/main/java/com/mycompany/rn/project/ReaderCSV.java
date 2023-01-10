@@ -9,12 +9,14 @@ import java.util.ArrayList;
 /**
  *
  * @author karol
+ * Classe para leitura do arquivo CSV no formato: X1,X2,X3,...,Xn,CLASSE
  */
 public class ReaderCSV {
 
     private static String linha = "";
     private static BufferedReader br = null;
 
+    //Le o arquivo e retorna uma matriz de valores contendo as linhas e colunas do arquivo
     public static ArrayList<ArrayList<Double>> reader(String path) {
        ArrayList<ArrayList<Double>> matrixAttributes = new ArrayList<>();
         
