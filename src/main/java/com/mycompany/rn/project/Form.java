@@ -14,8 +14,23 @@ public class Form extends javax.swing.JFrame {
     /**
      * Creates new form Form
      */
-    NeuralNetwork NN;
-    ArrayList<ArrayList<Double>> matrixAttributesTest;
+    double[][] matrixAttributesTest;
+    private Attributes treinamento=null;
+    private Attributes teste=null;
+    private NeuralNetwork rede;
+    
+    private int numNeuroniosEntrada;
+    private int numNeuroniosSaida;
+    private int numNeuroniosOcultos;
+    private int numCamadasOcultas;
+
+    public NeuralNetwork getRede() {
+        return rede;
+    }
+
+    public void setRede(NeuralNetwork rede) {
+        this.rede = rede;
+    }
 
     public Form() {
         initComponents();
@@ -146,14 +161,14 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        TextFieldMaxError.setText("0.001");
+        TextFieldMaxError.setText("0.0005");
         TextFieldMaxError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldMaxErrorActionPerformed(evt);
             }
         });
 
-        TextFieldNumberOfIterations.setText("500");
+        TextFieldNumberOfIterations.setText("2000");
         TextFieldNumberOfIterations.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldNumberOfIterationsActionPerformed(evt);
@@ -229,7 +244,7 @@ public class Form extends javax.swing.JFrame {
 
         jLabel1.setText("Taxa de aprendizado");
 
-        TextFieldLearningRate.setText("0.35");
+        TextFieldLearningRate.setText("0.4");
         TextFieldLearningRate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldLearningRateActionPerformed(evt);
@@ -379,13 +394,13 @@ public class Form extends javax.swing.JFrame {
             String filePath = file.getPath();
             LabelFileName.setText(fileName);
 
-            ArrayList<ArrayList<Double>> matrixAttributes = ReaderCSV.reader(filePath);
+            double[][] matrixAttributes = ReaderCSV.reader(filePath);
 
-            NN = new NeuralNetwork(matrixAttributes);
-
-            LabelAttributesAmount.setText(String.valueOf(NN.getAttributesAmount()));
-            LabelClassAmount.setText(String.valueOf(NN.getClassAmount()));
-            TextFieldOcultLayer.setText(String.valueOf(NN.calculateNeuronsOcultLayer()));
+            treinamento = new Attributes(matrixAttributes);
+            treinamento.embaralhar();
+            numNeuroniosEntrada = treinamento.getInstancia(0).atributos.length;
+            numNeuroniosSaida = treinamento.getNumClasses();
+            numNeuroniosOcultos = (int)Math.round(Math.sqrt(numNeuroniosEntrada * numNeuroniosSaida));
 
             ButtonInitTraining.setEnabled(true);
 
@@ -435,9 +450,9 @@ public class Form extends javax.swing.JFrame {
 
         //definindo função que será usada
         if (RadioButtonLogistic.isSelected()) {
-            NN.setFunction(0);
+            NN.setFunction(new Logistica());
         } else {
-            NN.setFunction(1);
+            NN.setFunction(new TangenteHiberbolica());
         }
 
         //definindo condição de parada
