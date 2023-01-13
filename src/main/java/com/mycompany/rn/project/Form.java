@@ -1,8 +1,8 @@
 package com.mycompany.rn.project;
 
 import java.io.File;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,10 +15,10 @@ public class Form extends javax.swing.JFrame {
      * Creates new form Form
      */
     double[][] matrixAttributesTest;
-    private Attributes treinamento=null;
-    private Attributes teste=null;
+    private Attributes treinamento = null;
+    private Attributes teste = null;
     private NeuralNetwork rede;
-    
+
     private int numNeuroniosEntrada;
     private int numNeuroniosSaida;
     private int numNeuroniosOcultos;
@@ -39,8 +39,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTest.setEnabled(false);
         RadioButtonLogistic.setSelected(true);
         RadioButtonMaxError.setSelected(true);
-        NN = null;
-        matrixAttributesTest = new ArrayList<>();
     }
 
     /**
@@ -400,7 +398,9 @@ public class Form extends javax.swing.JFrame {
             treinamento.embaralhar();
             numNeuroniosEntrada = treinamento.getInstancia(0).atributos.length;
             numNeuroniosSaida = treinamento.getNumClasses();
-            numNeuroniosOcultos = (int)Math.round(Math.sqrt(numNeuroniosEntrada * numNeuroniosSaida));
+            numNeuroniosOcultos = (int) Math.round(Math.sqrt(numNeuroniosEntrada * numNeuroniosSaida));
+
+            this.normalizar();
 
             ButtonInitTraining.setEnabled(true);
 
@@ -432,6 +432,8 @@ public class Form extends javax.swing.JFrame {
 
             matrixAttributesTest = ReaderCSV.reader(filePath);
 
+            teste = new Attributes(matrixAttributesTest);
+
             ButtonInitTest.setEnabled(true);
 
         } else {
@@ -444,33 +446,28 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_TextFieldNumberOfIterationsActionPerformed
 
     private void ButtonInitTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTrainingActionPerformed
-        //definindo neuronios da camada oculta
-        int neuronsOcultLayer = Integer.parseInt(TextFieldOcultLayer.getText());
-        NN.setNeuronsOcultLayerAmount(neuronsOcultLayer);
-
-        //definindo função que será usada
-        if (RadioButtonLogistic.isSelected()) {
-            NN.setFunction(new Logistica());
+        if (TextFieldLearningRate.getText().isBlank()
+                || TextFieldMaxError.getText().isEmpty()
+                || TextFieldNumberOfIterations.getText().isEmpty()
+                || TextFieldOcultLayer.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.WARNING_MESSAGE);
         } else {
-            NN.setFunction(new TangenteHiberbolica());
+            int numNeuroniosCamadaOculta = Integer.parseInt(TextFieldOcultLayer.getText());
+            Função function = (RadioButtonTH.isSelected() ? new TangenteHiperbolica() : new Logistica());
+            this.criarRedeNeural(1, numNeuroniosCamadaOculta, function);
+            
+            double taxa = Double.parseDouble(TextFieldLearningRate.getText());
+            double erro = Double.parseDouble(TextFieldMaxError.getText());
+            int iteracoes = Integer.parseInt(TextFieldNumberOfIterations.getText());
+
+            this.getRede().setTaxaAprendizado(taxa);
+            this.getRede().setLimiar(erro);
+            this.getRede().setNumIteraçõesLimite(iteracoes);
+            this.treinarRede();
+
+            //Quanto o treinamento estiver completo habilitamos os botões para teste
+            ButtonChoseFile2.setEnabled(true);
         }
-
-        //definindo condição de parada
-        if (RadioButtonMaxError.isSelected()) {
-            NN.setStop(0);
-            NN.setStopNumber(Double.parseDouble(TextFieldMaxError.getText()));
-        } else {
-            NN.setStop(1);
-            NN.setStopNumber(Integer.parseInt(TextFieldNumberOfIterations.getText()));
-        }
-
-        NN.setLearningRate(Double.parseDouble(TextFieldLearningRate.getText()));
-
-        //Iniciando treinamento
-        NN.initTraining();
-
-        //Quanto o treinamento estiver completo habilitamos os botões para teste
-        ButtonChoseFile2.setEnabled(true);
     }//GEN-LAST:event_ButtonInitTrainingActionPerformed
 
     private void ButtonInitTraining1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTraining1ActionPerformed
@@ -490,21 +487,36 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_RadioButtonMaxErrorActionPerformed
 
     private void ButtonInitTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTestActionPerformed
-        int[][] confusionMatrix = NN.test(matrixAttributesTest);
+        int[][] confusionMatrix = rede.testarRede(teste);
 
         DefaultTableModel model = (DefaultTableModel) Table.getModel();
-        for(int i = 0; i < confusionMatrix.length; i++){
+        for (int i = 0; i < confusionMatrix.length; i++) {
             model.removeRow(0);
         }
-        
-        for(int i = 0; i < confusionMatrix.length; i++){
+
+        for (int i = 0; i < confusionMatrix.length; i++) {
             Object[] row = new Object[confusionMatrix.length];
-            for(int j = 0; j < confusionMatrix.length; j++){
-                row[j] = (Object)confusionMatrix[i][j];
+            for (int j = 0; j < confusionMatrix.length; j++) {
+                row[j] = (Object) confusionMatrix[i][j];
             }
             model.addRow(row);
         }
     }//GEN-LAST:event_ButtonInitTestActionPerformed
+
+    public void treinarRede() {
+        treinamento.embaralhar();
+        rede.treinamento(treinamento);
+    }
+
+    private void normalizar() {
+        treinamento.normalizar(0, 1, teste);
+    }
+
+    public void criarRedeNeural(int numeroCamadasOcultas, int numeroNeuronicosCamadaOculta, Função f) {
+        rede = new NeuralNetwork(numNeuroniosEntrada, numeroNeuronicosCamadaOculta, numeroCamadasOcultas, numNeuroniosSaida, f);
+        this.numCamadasOcultas = numeroCamadasOcultas;
+        this.numNeuroniosOcultos = numeroNeuronicosCamadaOculta;
+    }
 
     private void TextFieldLearningRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldLearningRateActionPerformed
         // TODO add your handling code here:

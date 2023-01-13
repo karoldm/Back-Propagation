@@ -1,6 +1,11 @@
+
 package com.mycompany.rn.project;
 
-public class TangenteHiberbolica extends Função {
+/**
+ *
+ * @author karol
+ */
+public class TangenteHiperbolica extends Função {
     @Override
     public double compute(double x) {
         return (1 - Math.exp(-2 * x)) / (1 + Math.exp(-2 * x));

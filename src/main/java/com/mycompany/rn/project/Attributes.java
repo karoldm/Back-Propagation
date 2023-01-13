@@ -28,11 +28,15 @@ public class Attributes {
 
     private final int numClasses = 0;
 
-    public Attributes(double[][] inputs, String classe) {
-
-        for (double[] atributos : inputs) {
-            attributes.add(new AttributeRow(atributos, classe));
-            mapeamentoSaidas.putIfAbsent(classe, null);
+    public Attributes(double[][] inputs) {
+        
+        for (double[] row : inputs) {
+            double[] atributos = new double[row.length-1];
+             for(int i = 0; i <row.length-1;i++ ){
+                 atributos[i] = row[i];
+             }
+            attributes.add(new AttributeRow(atributos, String.valueOf(atributos[atributos.length-1])));
+            mapeamentoSaidas.putIfAbsent(String.valueOf(atributos[atributos.length-1]), null);
         }
   
     }

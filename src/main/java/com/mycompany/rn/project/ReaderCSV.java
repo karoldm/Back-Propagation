@@ -18,30 +18,27 @@ public class ReaderCSV {
 
     //Le o arquivo e retorna uma matriz de valores contendo as linhas e colunas do arquivo
     public static double[][] reader(String path) {
-       double[][] matrixAttributes = new double[][];
+       ArrayList<ArrayList<Double>> matrixAttributes = new ArrayList<>();
+       double[][] matrixAttributesArray = null;
         
         try {
 
             br = new BufferedReader(new FileReader(path));
 
             linha = br.readLine();
-            
-            int cont = 0;
-            int contRow = 0;
 
             while ((linha = br.readLine()) != null) {
 
                 String[] linhaSplit = linha.split(",");
-                double[] row = new double[linhaSplit.length];
+                ArrayList<Double> row = new ArrayList<>();
 
                 for (String str : linhaSplit) {
-                    row[contRow] = Double.parseDouble(str);
-                    contRow++;
+                    row.add(Double.valueOf(str));
                 }
-                contRow = 0;
-                matrixAttributes[cont] = row;
-                cont++;
+                matrixAttributes.add(row);
             }
+            
+            matrixAttributesArray = new double[matrixAttributes.size()][matrixAttributes.get(0).size()];
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -57,7 +54,7 @@ public class ReaderCSV {
             }
         }
 
-        return matrixAttributes;
+        return matrixAttributesArray;
     }
 
 }
