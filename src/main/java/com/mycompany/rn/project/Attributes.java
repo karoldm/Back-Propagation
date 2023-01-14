@@ -8,53 +8,57 @@ import java.util.Set;
 /**
  *
  * @author karol
+ * Classe que representa a matriz de atributos dos conjuntos de treinamento e teste
  */
 public class Attributes {
 
-    public static final int NORMALIZAR_ENTRE_0E1 = 1;
-    public static final int NORMALIZAR_ENTRE_M1E1 = 2;
-
-    /*Instancias  do conjunto*/
+    //linhas da matriz
     private ArrayList<AttributeRow> attributes = new ArrayList<>();
 
-    /**
-     * Saida esperada da rede para cada classe Armazenada para evitar calcular a
-     * saida toda hora
-     */
-    private final HashMap<String, Double[]> mapeamentoSaidas = new HashMap<>(10);
+    //Saída esperada mapeada para a rede
+    //Por exemplo: classe desejada = 5 então saída = [0, 0, 0, 0, 1] se a função for logistica
+    //e saída = [-1, -1, -1, -1, 1] se a função for tangente hiperbolica
+    private final HashMap<String, Double[]> outputsMap = new HashMap<>(10);
 
-    /*Classes do conjunto de instancias*/
+    //classes do conjunto
     private final ArrayList<String> classes = new ArrayList<>();
 
-    private final int numClasses = 0;
+    private int numClasses = 0;
 
+    
+    /**
+     * Método Construtor
+     * @param inputs matriz de atributos lida do CSV no formato X1,X2,X3,...,Xn,CLASSE
+     */
     public Attributes(double[][] inputs) {
         
         for (double[] row : inputs) {
-            double[] atributos = new double[row.length-1];
-             for(int i = 0; i <row.length-1;i++ ){
+            double[] atributos = new double[row.length];
+             for(int i = 0; i <row.length;i++ ){
                  atributos[i] = row[i];
              }
             attributes.add(new AttributeRow(atributos, String.valueOf(atributos[atributos.length-1])));
-            mapeamentoSaidas.putIfAbsent(String.valueOf(atributos[atributos.length-1]), null);
+            outputsMap.putIfAbsent(String.valueOf(atributos[atributos.length-1]), null);
         }
-  
+        this.numClasses = outputsMap.size();
     }
 
-    public AttributeRow getInstancia(int i) {
+    //Retorna a linha i da matriz de atributos: X1,X2,X3,..,Xn,CLASSE
+    public AttributeRow getAttributeRow(int i) {
         return attributes.get(i);
     }
 
+    //Retorna a quantidade de linhas da matriz de atributos
     public int size() {
         return attributes.size();
     }
 
-    /*Retorna os atributos da instancia i*/
+    //Retorna os atributos da linha i da matriz, ou seja, X1,X2,X3,..,Xn sem a CLASSE
     public double[] getAtributos(int i) {
         return attributes.get(i).atributos;
     }
 
-    /*Embaralha o conjunto de instancias*/
+    //Embaralha as linhas para treinar a rede melhor
     public void embaralhar() {
         ArrayList<AttributeRow> novaInstancias = new ArrayList<>();
         Random r = new Random();
@@ -64,58 +68,20 @@ public class Attributes {
         attributes = novaInstancias;
     }
 
-    /**
-     * Retorna a saida esperada da rede para a instancia*
-     */
+    //Retorna a saída desejada para a linha i
     public Double[] getSaida(int i) {
-        return mapeamentoSaidas.get(attributes.get(i).classe);
+        return outputsMap.get(attributes.get(i).classe);
     }
 
-//    /**Abre o arquivo especificado pelo parametro e carrega as instancias**/
-//    public boolean abrirArquivo(File arquivo) {
-//        instancias.clear();
-//        BufferedReader reader = null;
-//        try {
-//            int i, cont = 0;
-//            String classe;
-//            reader = new BufferedReader(new FileReader(arquivo));
-//            String linha;
-//            String[] tokens;
-//
-//            tokens = reader.readLine().split(",");
-//            numAtributos = tokens.length - 1;
-//            while ((linha = reader.readLine()) != null) {
-//                double[] atributos = new double[numAtributos];
-//                tokens = linha.split(",");
-//                for (i = 0; i < numAtributos; i++) {
-//                    atributos[i] = Double.valueOf(tokens[i]);
-//                }
-//                classe = tokens[i];
-//                instancias.add(new AttributeRow(atributos, classe));
-//                mapeamentoSaidas.putIfAbsent(classe, null);
-//            }
-//            numClasses = mapeamentoSaidas.size();
-//            reader.close();
-//        } catch (IOException ex) {
-//            instancias.clear();
-//            if (reader != null) {
-//                try {
-//                    reader.close();
-//                } catch (IOException ex1) {
-//                }
-//            }
-//        }
-//        return instancias.isEmpty();
-//    }
     /**
-     * Recupera o minimo e maximo de cada atributo do conjunto 'c' e retorna nos
+     * Recupera o minimo e maximo de cada atributo do conjunto 'attributes' e retorna nos
      * vetores de entrada
      */
-    private static void recuperaMinMax(double[] min, double[] max, Attributes c) {
-        if (c == null) {
+    private static void recuperaMinMax(double[] min, double[] max, Attributes attributes) {
+        if (attributes == null) {
             return;
         }
-        for (AttributeRow i : c.attributes) {
+        for (AttributeRow i : attributes.attributes) {
             double[] atributos = i.atributos;
             for (int cont = 0; cont < atributos.length; cont++) {
                 if (atributos[cont] < min[cont]) {
@@ -129,19 +95,19 @@ public class Attributes {
     }
 
     /**
-     * Normaliza cada instancia do conjunto 'c'
+     * Normaliza cada instancia do conjunto 'attributes'
      *
      * @param min menor valor de cada atributo do conjunto
      * @param max maior valor de cada stributo do conjunto
      * @param limiteMin menor valor do intervalo após normalização
      * @param limiteMax maior valor do intervalo após normalização
-     * @param c conjunto que será normalizado
+     * @param attributes conjunto que será normalizado
      */
-    private static void normaliza(double[] min, double[] max, double limiteMin, double limiteMax, Attributes c) {
-        if (c == null) {
+    private static void normaliza(double[] min, double[] max, double limiteMin, double limiteMax, Attributes attributes) {
+        if (attributes == null) {
             return;
         }
-        for (AttributeRow i : c.attributes) {
+        for (AttributeRow i : attributes.attributes) {
             i.normalizar(min, max, limiteMin, limiteMax);
         }
     }
@@ -172,16 +138,16 @@ public class Attributes {
      * @param funçãoPropagação A função é usada para definir o minimo e o maximo
      * da saida.
      */
-    public void definirSaidasClasses(Função funçãoPropagação) {
-        Set<String> valorClasses = mapeamentoSaidas.keySet();
+    public void definirSaidasClasses(Function funçãoPropagação) {
+        Set<String> valorClasses = outputsMap.keySet();
         int cont = 0;
         for (String i : valorClasses) {
-            Double[] saidaClasses = new Double[mapeamentoSaidas.size()];
-            for (int j = 0; j < mapeamentoSaidas.size(); j++) {
+            Double[] saidaClasses = new Double[outputsMap.size()];
+            for (int j = 0; j < outputsMap.size(); j++) {
                 saidaClasses[j] = funçãoPropagação.menorValorImagem();
             }
             saidaClasses[cont++] = funçãoPropagação.maiorValorImagem();
-            mapeamentoSaidas.put(i, saidaClasses);
+            outputsMap.put(i, saidaClasses);
             classes.add(i);
         }
     }

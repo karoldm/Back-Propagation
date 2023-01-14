@@ -4,11 +4,13 @@ package com.mycompany.rn.project;
 /**
  *
  * @author karol
+ * Classe que representa uma linha de Attributes
  */
 public class AttributeRow {
-    public double[] atributos;
-    public String classe;
+    public double[] atributos; //X1,X2,...,Xn
+    public String classe; //Classe desejada
     
+    //Método construtor
     public AttributeRow(double[] atributos, String classe){
         this.atributos = atributos;
         this.classe = classe;

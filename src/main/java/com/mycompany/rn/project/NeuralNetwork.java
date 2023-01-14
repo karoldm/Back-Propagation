@@ -16,7 +16,7 @@ public class NeuralNetwork {
     /**
      * Função de propagação usada pelos neuronios da rede
      */
-    protected Função funçãoPropagação;
+    protected Function funçãoPropagação;
 
     /**
      * Camadas de neuronios ocultos usados para o processamento
@@ -59,7 +59,7 @@ public class NeuralNetwork {
      * @param numNeuroniosSaida Numero de neuronios na camada de saida
      * @param propagação Função de propagação que será usado na rede
      */
-    public NeuralNetwork(int numNeuroniosEntrada, int numNeuroniosOcultos, int numCamadasOcultas, int numNeuroniosSaida, Função propagação) {
+    public NeuralNetwork(int numNeuroniosEntrada, int numNeuroniosOcultos, int numCamadasOcultas, int numNeuroniosSaida, Function propagação) {
         oculta = new Layer[numCamadasOcultas];
         oculta[0] = new Layer(numNeuroniosOcultos, propagação, numNeuroniosEntrada);
         for (int i = 1; i < oculta.length; i++) {

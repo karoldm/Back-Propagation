@@ -86,17 +86,16 @@ public class Form extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(453, 600));
         setPreferredSize(new java.awt.Dimension(453, 556));
-        setSize(new java.awt.Dimension(453, 600));
+        setSize(new java.awt.Dimension(475, 586));
 
         Panel.setBackground(new java.awt.Color(255, 255, 255));
-        Panel.setPreferredSize(new java.awt.Dimension(453, 556));
+        Panel.setPreferredSize(new java.awt.Dimension(475, 586));
 
         jLabel19.setText("Escolha o arquivo de treinamento");
 
         ButtonChoseFile.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile.setText("Escolher Arquivo");
-        ButtonChoseFile.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile.setBorderPainted(false);
         ButtonChoseFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile.setPreferredSize(null);
@@ -112,7 +111,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTraining.setBackground(new java.awt.Color(51, 51, 255));
         ButtonInitTraining.setForeground(new java.awt.Color(255, 255, 255));
         ButtonInitTraining.setText("Iniciar treinamento");
-        ButtonInitTraining.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonInitTraining.setBorderPainted(false);
         ButtonInitTraining.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonInitTraining.setPreferredSize(null);
@@ -178,7 +176,6 @@ public class Form extends javax.swing.JFrame {
         ButtonChoseFile2.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile2.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile2.setText("Escolher Arquivo");
-        ButtonChoseFile2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile2.setBorderPainted(false);
         ButtonChoseFile2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile2.setPreferredSize(null);
@@ -223,7 +220,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTest.setBackground(new java.awt.Color(255, 0, 0));
         ButtonInitTest.setForeground(new java.awt.Color(255, 255, 255));
         ButtonInitTest.setText("Testar");
-        ButtonInitTest.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonInitTest.setBorderPainted(false);
         ButtonInitTest.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonInitTest.setPreferredSize(null);
@@ -368,7 +364,7 @@ public class Form extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,9 +392,13 @@ public class Form extends javax.swing.JFrame {
 
             treinamento = new Attributes(matrixAttributes);
             treinamento.embaralhar();
-            numNeuroniosEntrada = treinamento.getInstancia(0).atributos.length;
+            numNeuroniosEntrada = treinamento.getAttributeRow(0).atributos.length-1;
             numNeuroniosSaida = treinamento.getNumClasses();
             numNeuroniosOcultos = (int) Math.round(Math.sqrt(numNeuroniosEntrada * numNeuroniosSaida));
+
+            LabelAttributesAmount.setText(String.valueOf(numNeuroniosEntrada));
+            LabelClassAmount.setText(String.valueOf(numNeuroniosSaida));
+            TextFieldOcultLayer.setText(String.valueOf(numNeuroniosOcultos));
 
             this.normalizar();
 
@@ -453,9 +453,12 @@ public class Form extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.WARNING_MESSAGE);
         } else {
             int numNeuroniosCamadaOculta = Integer.parseInt(TextFieldOcultLayer.getText());
-            Função function = (RadioButtonTH.isSelected() ? new TangenteHiperbolica() : new Logistica());
+            Function function = (RadioButtonTH.isSelected() ? new HyperbolicTangent() : new Logistic());
+
+            treinamento.definirSaidasClasses(function);
+
             this.criarRedeNeural(1, numNeuroniosCamadaOculta, function);
-            
+
             double taxa = Double.parseDouble(TextFieldLearningRate.getText());
             double erro = Double.parseDouble(TextFieldMaxError.getText());
             int iteracoes = Integer.parseInt(TextFieldNumberOfIterations.getText());
@@ -512,7 +515,7 @@ public class Form extends javax.swing.JFrame {
         treinamento.normalizar(0, 1, teste);
     }
 
-    public void criarRedeNeural(int numeroCamadasOcultas, int numeroNeuronicosCamadaOculta, Função f) {
+    public void criarRedeNeural(int numeroCamadasOcultas, int numeroNeuronicosCamadaOculta, Function f) {
         rede = new NeuralNetwork(numNeuroniosEntrada, numeroNeuronicosCamadaOculta, numeroCamadasOcultas, numNeuroniosSaida, f);
         this.numCamadasOcultas = numeroCamadasOcultas;
         this.numNeuroniosOcultos = numeroNeuronicosCamadaOculta;

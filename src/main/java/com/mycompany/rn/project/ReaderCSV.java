@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author karol
- * Classe para leitura do arquivo CSV no formato: X1,X2,X3,...,Xn,CLASSE
+ * @author karol Classe para leitura do arquivo CSV no formato:
+ * X1,X2,X3,...,Xn,CLASSE
  */
 public class ReaderCSV {
 
@@ -18,9 +18,9 @@ public class ReaderCSV {
 
     //Le o arquivo e retorna uma matriz de valores contendo as linhas e colunas do arquivo
     public static double[][] reader(String path) {
-       ArrayList<ArrayList<Double>> matrixAttributes = new ArrayList<>();
-       double[][] matrixAttributesArray = null;
-        
+        ArrayList<ArrayList<Double>> matrixAttributes = new ArrayList<>();
+        double[][] matrixAttributesArray = null;
+
         try {
 
             br = new BufferedReader(new FileReader(path));
@@ -37,8 +37,14 @@ public class ReaderCSV {
                 }
                 matrixAttributes.add(row);
             }
-            
+
             matrixAttributesArray = new double[matrixAttributes.size()][matrixAttributes.get(0).size()];
+
+            for(int i = 0; i < matrixAttributes.size(); i++){
+                for(int j = 0; j < matrixAttributes.get(0).size(); j++){
+                    matrixAttributesArray[i][j] = matrixAttributes.get(i).get(j);
+                }
+            }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

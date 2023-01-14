@@ -4,50 +4,47 @@ package com.mycompany.rn.project;
  *
  * @author karol
  * Classe para representar uma camada de neuronios 
- * Toda camada possui um array de neuronios, as entradas e as saídas de cada neurônio
- * e os erros calculados de cada neuronio 
+ * Toda camada possui um array de neuronios
+ * E os erros desse neuronio
  */
 public class Layer {
 
-   /*Conjunto de neuronios desta camada*/
+   //Neuronios da camada 
     protected Neuron[] neurons;
     
-    /*Armazena os erros calculados pelos neuronios desta camada para uso futuro*/
+    //Erro dos neuronios 
     protected double[] erros;
     
     /**
-     * Constroi a camada de neuronios e instancia os neuronios, setando os pesos
-     * aleatoriamente seguinda uma distribuição gaussiana com média 0 e desvio
-     * padão 1
+     * Método Construtor
      * @param numNeuroniosOcultos Numero de neuronios desta camada
-     * @param propagação Função de propagação usadas nos neuronios
-     * @param numPesos Numero de pesos que cada neuronios deve ter. Este numero
-     * Deve corresponder com o numero de neuronios da camada anterior a esta.
+     * @param function Função de propagação usadas nos neuronios
+     * @param numPesos Numero de pesos que cada neuronios deve ter
      */
-    public Layer(int numNeuroniosOcultos, Função propagação, int numPesos) {
+    public Layer(int numNeuroniosOcultos, Function function, int numPesos) {
         neurons = new Neuron[numNeuroniosOcultos];
         erros = new double[numNeuroniosOcultos];
         for(int i=0;i<neurons.length;i++){
-            neurons[i] = new Neuron(propagação,numPesos);
+            neurons[i] = new Neuron(function,numPesos);
         }
     }
 
     /**
-     * Processo de feedFoward desta camada.
+     * Método para o processo de feedFoward/realimentação desta camada
      * @param inputs entrada recebida por esta camada
      * @return retonar os sinais propagados por esta camada
      */
     public double[] feedFoward(double[] inputs) {
         double[] sinais = new double[neurons.length];
         for(int i=0;i<neurons.length;i++){
-            sinais[i] = neurons[i].calcularPropagação(inputs);
+            sinais[i] = neurons[i].calcularSaida(inputs);
         }
         return sinais;
     }
 
     /**
-     * Calcula os erros destes neuronios considerandos as saidas desejadas.
-     * Esse método deve ser chamado apenas para a camada de saida.
+     * Método para calcular os erros destes neuronios considerandos 
+     * as saidas desejadas (camada de saída)
      * @param outputEsperado saidas esperadas por essa camada
      */
     public void calculaErros(Double[] outputEsperado) {
@@ -61,10 +58,8 @@ public class Layer {
     }
 
     /**
-     * Calcula os erros destes neuronios considerandos os erros propagados pela
-     * camada posterior a esta.
-     * Esse método deve ser chamado apenas para camadas ocultas.
-     * @param saida Camada posterior a esta
+     * Método para calcular os erros destes neuronios (camada oculta)
+     * @param saida camada de saída
      */
     public void calculaErros(Layer saida) {
         for(int i=0;i<neurons.length;i++){
@@ -74,8 +69,8 @@ public class Layer {
     }
 
     /**
-     * Retorna a soma dos erros destes neuronios "i" multiplicados pelo peso Wij
-     * Formula: Σ (de i=0 até m)(erro(i)*Wij) 
+     * Método que retorna a soma dos erros destes neuronios "i" multiplicados pelo peso Wij
+     * Formula: somatorio(de i=0 até m)(erro(i)*Wij) 
      * @param j indice do neuronio da camada oculta anterior para o qual está sendo 
      * calculando o erro
      * @return retorna a soma 
@@ -89,10 +84,7 @@ public class Layer {
     }
     
     /**
-     * Ajusta os pesos desse neuronio utilizando a taxa de aprendizado vindo
-     * pelo parametro.
-     * Este metodo deve ser chamado após está camada ter calculado seus erros e
-     * de preferencia após toda a rede ter calculada seus erros
+     * Método para ajustar os pesos desse neuronio utilizando a taxa de aprendizado 
      * @param taxaAprendizado Taxa de aprendizado utilizado para ajustar os pesos
      */
     public void ajustarPesos(double taxaAprendizado) {
@@ -102,10 +94,7 @@ public class Layer {
     }
 
     /**
-     * Retorna metade da soma dos quadrados dos erros dos neuronios desta camada
-     * Formula: 1/2 * Σ (de i=0 até o)(erro(i)^2)
-     * Deve ser chamado apenas para a camada de saida.
-     * @return Retorna metade da soma.
+     * @return Retorna o erro da rede, dado pela fórmula: 1/2 * Σ (de i=0 até o)(erro(i)^2)
      */
     public double erroRede() {
         double soma = 0;
@@ -117,7 +106,7 @@ public class Layer {
 
     /**
      * Retorna os pesos do neuronio
-     * @param neuronio Neuronio no qual será retornado os pesos
+     * @param neuronio Neuronio que se deseja recuperar os pesos
      */
     public double[] getPesos(int neuronio) {
         return neurons[neuronio].pesos;
