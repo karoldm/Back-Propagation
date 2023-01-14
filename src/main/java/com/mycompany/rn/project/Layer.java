@@ -1,102 +1,114 @@
 package com.mycompany.rn.project;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author karol
  * Classe para representar uma camada de neuronios 
- * Toda camada possui um array de neuronios, as entradas e as saídas de cada neurônio
- * e os erros calculados de cada neuronio 
+ * Toda camada possui um array de neuronios
+ * E os erros desse neuronio
  */
 public class Layer {
 
-    protected ArrayList<Neuron> neurons; //array de neuronios
-    protected ArrayList<Double> outputs; //array com as saídas calculadas de cada neuronio
-    protected ArrayList<Double> errors; //array com os erros calculadas de cada neuronio
-    protected ArrayList<Double> inputs; //array com as entradas de cada neuronio
-    protected int neuronsAmount; //quantidade de neuronios
-    protected int function; //função usada nos neuronios, onde 0 = logistica e 1 = tangente hiperbolica
-
-    public Layer(int neuronsAmount, int weightsAmount, int function) {
-        this.errors = new ArrayList<>();
-        this.function = function;
-        this.neurons = new ArrayList<>();
-        this.errors = new ArrayList<>();
-        this.outputs = new ArrayList<>();
-
-        this.neuronsAmount = neuronsAmount;
-
-        //iniciando neuronios 
-        //cada neuronio da camada possui weightsAmount pesos 
-        //os pesos são escolhidos aleatóriamente entre -1 e 1
-        ArrayList<Double> weights = new ArrayList<>();
-
-        for (int i = 0; i < neuronsAmount; i++) {
-            weights = new ArrayList<>();
-            
-            for (int j = 0; j < weightsAmount; j++) {
-                double weight = Math.random() * (1 - (-1)) + (-1);
-                weights.add(weight);
-            }
-            
-            Neuron newNeuron = new Neuron(weights, function);
-            neurons.add(newNeuron);
-        }
-         
-    }
-
-    public ArrayList<Neuron> getNeurons() {
-        return this.neurons;
-    }
-
-    public void setNeurons(ArrayList<Neuron> neurons) {
-        this.neurons = neurons;
-    }
-
-    public ArrayList<Double> getOutputs() {
-        return this.outputs;
-    }
-
-    public void setOutputs(ArrayList<Double> outputs) {
-        this.outputs = outputs;
-    }
-
-    public ArrayList<Double> getErrors() {
-        return this.errors;
-    }
-
-    public void setErrors(ArrayList<Double> erros) {
-        this.errors = erros;
-    }
-
-    public ArrayList<Double> getInputs() {
-        return this.inputs;
-    }
-
-    //O método setInputs recebe as entradas de cada neuronio, calcula os nets e aplica a função de transferencia
-    //gerando uma saída para cada neuronio armazenadas no array outputs
-    public void setInputs(ArrayList<Double> inputs) {
-        this.outputs = new ArrayList<>();
-        
-        //para cada neuronio da camada 
-        for (int i = 0; i < this.neurons.size(); i++) {
-            Neuron neuron = this.neurons.get(i);
-            
-            //inserindo entradas
-            neuron.setInputs(inputs);
-            
-            //calculando saida de cada neuronio da camada 
-            this.outputs.add(neuron.getOutput());
+   //Neuronios da camada 
+    protected Neuron[] neurons;
+    
+    //Erro dos neuronios 
+    protected double[] erros;
+    
+    /**
+     * Método Construtor
+     * @param numNeuroniosOcultos Numero de neuronios desta camada
+     * @param function Função de propagação usadas nos neuronios
+     * @param numPesos Numero de pesos que cada neuronios deve ter
+     */
+    public Layer(int numNeuroniosOcultos, Function function, int numPesos) {
+        neurons = new Neuron[numNeuroniosOcultos];
+        erros = new double[numNeuroniosOcultos];
+        for(int i=0;i<neurons.length;i++){
+            neurons[i] = new Neuron(function,numPesos);
         }
     }
 
-    public int getNeuronsAmount() {
-        return this.neuronsAmount;
+    /**
+     * Método para o processo de feedFoward/realimentação desta camada
+     * @param inputs entrada recebida por esta camada
+     * @return retonar os sinais propagados por esta camada
+     */
+    public double[] feedFoward(double[] inputs) {
+        double[] sinais = new double[neurons.length];
+        for(int i=0;i<neurons.length;i++){
+            sinais[i] = neurons[i].calcularSaida(inputs);
+        }
+        return sinais;
     }
 
-    public void setNeuronsAmount(int neuronsAmount) {
-        this.neuronsAmount = neuronsAmount;
+    /**
+     * Método para calcular os erros destes neuronios considerandos 
+     * as saidas desejadas (camada de saída)
+     * @param outputEsperado saidas esperadas por essa camada
+     */
+    public void calculaErros(Double[] outputEsperado) {
+        for(int i=0;i<neurons.length;i++){
+            erros[i] = neurons[i].calculaErroSaida(outputEsperado[i]);
+        }
     }
 
+    public double[] getErros(){
+        return erros;
+    }
+
+    /**
+     * Método para calcular os erros destes neuronios (camada oculta)
+     * @param saida camada de saída
+     */
+    public void calculaErros(Layer saida) {
+        for(int i=0;i<neurons.length;i++){
+            double soma = saida.somaErros(i);
+            neurons[i].calculaErroOculta(soma);
+        }
+    }
+
+    /**
+     * Método que retorna a soma dos erros destes neuronios "i" multiplicados pelo peso Wij
+     * Formula: somatorio(de i=0 até m)(erro(i)*Wij) 
+     * @param j indice do neuronio da camada oculta anterior para o qual está sendo 
+     * calculando o erro
+     * @return retorna a soma 
+     */
+    private double somaErros(int j) {
+        double soma =0;
+        for(int i=0;i<neurons.length;i++){
+            soma+=neurons[i].erro*neurons[i].pesos[j];
+        }
+        return soma;
+    }
+    
+    /**
+     * Método para ajustar os pesos desse neuronio utilizando a taxa de aprendizado 
+     * @param taxaAprendizado Taxa de aprendizado utilizado para ajustar os pesos
+     */
+    public void ajustarPesos(double taxaAprendizado) {
+        for(int i=0;i<neurons.length;i++){
+            neurons[i].ajustarPesos(taxaAprendizado);
+        }
+    }
+
+    /**
+     * @return Retorna o erro da rede, dado pela fórmula: 1/2 * Σ (de i=0 até o)(erro(i)^2)
+     */
+    public double erroRede() {
+        double soma = 0;
+        for(int i=0;i<neurons.length;i++){
+            soma+=Math.pow(neurons[i].erro, 2);
+        }
+        return soma/2;
+    }
+
+    /**
+     * Retorna os pesos do neuronio
+     * @param neuronio Neuronio que se deseja recuperar os pesos
+     */
+    public double[] getPesos(int neuronio) {
+        return neurons[neuronio].pesos;
+    }
 }

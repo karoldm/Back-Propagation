@@ -1,261 +1,231 @@
 package com.mycompany.rn.project;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Random;
 
 /**
  *
- * @author karol
- * Classe que representa a rede neural
+ * @author karol Classe que representa a rede neural
  */
 public class NeuralNetwork {
 
-    private int classAmount; //quantidade de classes na rede ou quantidade de neuronios na camada de saída
-    private int attributesAmount; //quantidade de atributos ou quantidade de neuronios na camada de entrada
-    private int neuronsOcultLayerAmount; //quantidade de neuronios na camada oculta 
-    private final ArrayList<ArrayList<Double>> matrixAttributes; //matriz com os atributos e classe do conjunto de treinamento
-    //formato: X1 X2 X3 X4 X5 ... Xn CLASSE
-    private int function; //0 = logistic and 1 = hyperbolic tangent
-    private int stop; //0 = max error and 1 = number of iterations
-    private double stopNumber; //condição de parada segundo número máximo de iterações ou erro máximo
-    private double learningRate; //taxa de aprendizado
-    private OcultLayer ocultLayer; //classe com responsavel pelos neuronios da camada oculta
-    private OutputLayer outputLayer; //classe com responsavel pelos neuronios da camada de saída
+    /**
+     * Usado para gerar os pesos aleatorios dos neuronios
+     */
+    public static final Random rand = new Random();
 
-    //Ao criar a NN passamos o conjunto de atributosXclasse lido pelo CSV
-    public NeuralNetwork(ArrayList<ArrayList<Double>> matrixAttributes) {
-        this.matrixAttributes = matrixAttributes;
-        this.classAmount = 0;
-        this.neuronsOcultLayerAmount = 0;
-        this.function = 0;
-        this.stop = 0;
-        this.stopNumber = 0;
-        this.learningRate = 1;
-        this.ocultLayer = null;
-        this.outputLayer = null;
+    /**
+     * Função de propagação usada pelos neuronios da rede
+     */
+    protected Function funçãoPropagação;
 
-        //contando quantidade de atributos 
-        this.attributesAmount = matrixAttributes.get(0).size() - 1;
+    /**
+     * Camadas de neuronios ocultos usados para o processamento
+     */
+    protected Layer[] oculta;
 
-        int sum = 0;
+    /**
+     * Camada de neuronios na saida
+     */
+    protected Layer saida;
 
-        int sizeMatrix = matrixAttributes.size();
+    /**
+     * Taxa de aprendizado para esta rede
+     */
+    protected double taxaAprendizado = 0.1;
 
-        ArrayList<Double> row = matrixAttributes.get(sizeMatrix - 1);
+    /**
+     * Numero de iterações para parar o treinamento caso a rede não convergir.
+     * Caso o erro da rede seja menor que <code>limiar</code> o treinamento para
+     * antes
+     */
+    protected int numIteraçõesLimite = 20000;
 
-        int sizeRow = row.size();
+    /**
+     * Limiar usado para parar o treinamento antes do limite de iterações. O
+     * treinamento para caso o valor do erro seja menor que o limiar
+     */
+    protected double limiar = 0.000001f;
 
-        Set<Double> classes = new HashSet();
-
-        //Contando quantidade de classes
-        for (ArrayList<Double> rowIterator : matrixAttributes) {
-            classes.add(rowIterator.get(sizeRow - 1));
+    /**
+     * Cria a rede neural e instancia as camadas e os neuronios da rede. Os
+     * pesos dos neuronios são decididos aleatoriamente seguindo uma
+     * distribuição gaussiana com media 0 e desvio padrão 1.
+     *
+     * As camadas ocultas possuem a mesma quantidade de neuronios.
+     *
+     * @param numNeuroniosEntrada Numero de neuronios na camada de entrada
+     * @param numNeuroniosOcultos Numero de neuronios na camada oculta
+     * @param numCamadasOcultas Numero de camadas ocultas
+     * @param numNeuroniosSaida Numero de neuronios na camada de saida
+     * @param propagação Função de propagação que será usado na rede
+     */
+    public NeuralNetwork(int numNeuroniosEntrada, int numNeuroniosOcultos, int numCamadasOcultas, int numNeuroniosSaida, Function propagação) {
+        oculta = new Layer[numCamadasOcultas];
+        oculta[0] = new Layer(numNeuroniosOcultos, propagação, numNeuroniosEntrada);
+        for (int i = 1; i < oculta.length; i++) {
+            oculta[i] = new Layer(numNeuroniosOcultos, propagação, numNeuroniosOcultos);
         }
-
-        this.classAmount = classes.size();
+        saida = new Layer(numNeuroniosSaida, propagação, numNeuroniosOcultos);
+        funçãoPropagação = propagação;
     }
 
-    public double getLearningRate() {
-        return learningRate;
-    }
-
-    public void setLearningRate(double learningRate) {
-        this.learningRate = learningRate;
-    }
-
-    public double getStopNumber() {
-        return stopNumber;
-    }
-
-    public void setStopNumber(double stopNumber) {
-        this.stopNumber = stopNumber;
-    }
-
-    public int getStop() {
-        return stop;
-    }
-
-    public void setStop(int stop) {
-        this.stop = stop;
-    }
-
-    public int getFunction() {
-        return function;
-    }
-
-    public void setFunction(int function) {
-        this.function = function;
-    }
-
-    public int getClassAmount() {
-        return classAmount;
-    }
-
-    public void setClassAmount(int classAmount) {
-        this.classAmount = classAmount;
-    }
-
-    public int getAttributesAmount() {
-        return attributesAmount;
-    }
-
-    public void setAttributesAmount(int attributesAmount) {
-        this.attributesAmount = attributesAmount;
-    }
-
-    public int getNeuronsOcultLayerAmount() {
-        return neuronsOcultLayerAmount;
-    }
-
-    public void setNeuronsOcultLayerAmount(int neuronsOcultLayerAmount) {
-        this.neuronsOcultLayerAmount = neuronsOcultLayerAmount;
-    }
-
-    public int calculateNeuronsOcultLayer() {
-        return (int) Math.round(Math.sqrt(classAmount * attributesAmount));
-    }
-
-    private boolean getStopCondiction(double error, int iterations) {
-        if (stop == 0 && error < stopNumber) { //maxError
-            return false;
+    /**
+     * Realiza a alimentação na rede com a entrada especificada no parametro
+     *
+     * @param inputs entrada da rede
+     * @return retorna a saida da rede
+     */
+    public double[] feedFoward(double[] inputs) {
+        double[] sinais = inputs;
+        for (int i = 0; i < oculta.length; i++) {
+            sinais = oculta[i].feedFoward(sinais);
         }
-        if (stop == 1 && iterations >= stopNumber) {
-            return false;
-        }
-        return true;
+        sinais = saida.feedFoward(sinais);
+        return sinais;
     }
 
-    //Método para treinar a rede com o conjunto matrixAttributes
-    public void initTraining() {
-        
-        //iniciando neuronios da camada oculta
-        this.ocultLayer = new OcultLayer(neuronsOcultLayerAmount, attributesAmount, function);
-
-        //iniciando neuronios da camada de saída
-        this.outputLayer = new OutputLayer(classAmount, neuronsOcultLayerAmount, function);
-
-        //Separando dados de entrada de suas classes onde 
-        ////inputs[i] contém X1 X2 X3 X4 ... e classeDesejada[i] contém CLASSE
-        ArrayList<Double> classeDesejada = new ArrayList<>();
-        ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
-
-        for (int i = 0; i < matrixAttributes.size(); i++) {
-
-            inputs.add(new ArrayList<>());
-
-            //Selecionando a classe desejada 
-            ArrayList<Double> row = matrixAttributes.get(i);
-            classeDesejada.add(row.get(attributesAmount));
-
-            for (int j = 0; j < row.size() - 1; j++) {
-                inputs.get(i).add((double) row.get(j));
-            }
-        }
-
-        double error = 10000;
-        int iterations = 0;
-        while (getStopCondiction(error, iterations)) {
-
-            //para cada linha de atributos do conjunto de treinamento
-            for (int i = 0; i < inputs.size(); i++) {
-
-                //calculando saidas dos neuronios da camada oculta 
-                //o método setInputs insere os dados da linha i em cada neuronio da camada oculta 
-                //calcula seus nets e aplica a função de transferencia, armazenando o resultado no
-                //array outputs
-                ocultLayer.setInputs(inputs.get(i));
-
-                //calculando saidas dos neuronios da camada de saída 
-                //o método setInputs insere as saídas dos neuronios da camada oculta em
-                //cada neuronio da camada de saída calcula seus nets e aplica a função 
-                //de transferencia, armazenando o resultado no array outputs
-                outputLayer.setInputs(ocultLayer.getOutputs());
-
-                //Calculando erro dos neuronios da camada de saída 
-                //o método caclErrors calcula o erro de cada neuronio da camada de saída 
-                //e os armazena no array errors
-                outputLayer.calcErrors(classeDesejada.get(i));
-                
-                //Calculando erro dos neuronios da camada oculta
-                //o método caclErrors calcula o erro de cada neuronio da camada oculta
-                //e os armazena no array errors
-                ocultLayer.calcErrors(outputLayer.getNeurons(), outputLayer.getErrors());
-                
-                //Atualizando pesos dos neuronios da camada de saída
-                //o método updateWeights atualiza os pesos de cada neuronio
-                outputLayer.updateWeights(learningRate, ocultLayer.getOutputs());
-
-                //Atualizando pesos dos neuronios da camada oculta
-                //o método updateWeights atualiza os pesos de cada neuronio
-                ocultLayer.updateWeights(learningRate, inputs.get(i));
-            }
-
-            //calcular erro da rede
-            error = outputLayer.getNetworkError();
-            //incrementando iterações
-            iterations++;
-        }
-
+    /**
+     * Realiza uma iteração na rede. A iteração é composta de um feedfoward e um
+     * backpropagation para uma entrada.
+     *
+     * @param inputs entrada para a iteração
+     * @param outputEsperado resultado esperado
+     * @return retorna o erro da rede nesta iteração.
+     */
+    public double iteration(double[] inputs, Double[] outputEsperado) {
+        double[] output = feedFoward(inputs);
+        backPropagation(output, outputEsperado);
+        return erroRede();
     }
 
-    //Método para testar a rede com um conjunto de entradas
-    public int[][] test(ArrayList<ArrayList<Double>> matrixAttributesTest) {
-
-        ArrayList<Integer> classeDesejada = new ArrayList<>();
-        ArrayList<ArrayList<Double>> inputs = new ArrayList<>();
-
-        int[][] confusionMatrix = new int[classAmount][classAmount];
-
-        //inicializando matriz de confusão
-        for (int i = 0; i < classAmount; i++) {
-            for (int j = 0; j < classAmount; j++) {
-                confusionMatrix[i][j] = 0;
-            }
-        }
-
-        //separando atributos de suas classes, de modo que 
-        //inputs[i] contém X1 X2 X3 X4 ... e classeDesejada[i] contém CLASSE
-        for (int i = 0; i < matrixAttributesTest.size(); i++) {
-
-            inputs.add(new ArrayList<>());
-
-            //Selecionando a classe desejada 
-            ArrayList<Double> row = matrixAttributesTest.get(i);
-            classeDesejada.add((int) Math.round(row.get(attributesAmount)));
-
-            for (int j = 0; j < row.size() - 1; j++) {
-                inputs.get(i).add((double) row.get(j));
-            }
-        }
-
-        //inputs[i] contém X1 X2 X3 X4 ... e classeDesejada[i] contém CLASSE
-        //para cada linha de atributos
-        for (int i = 0; i < inputs.size(); i++) {
-
-            //calculando saidas dos neuronios da camada oculta 
-            ocultLayer.setInputs(inputs.get(i));
-      
-            //calculando saidas dos neuronios da camada de saída
-            outputLayer.setInputs(ocultLayer.getOutputs());
-            
-            //A classe é definida pelo neuronio que possuir a maior saída
-            //Se outputs = [0.3 0.8 0.1 -0.1 0.05 0.5] classe = 2
-            ArrayList<Double> outputs = outputLayer.getOutputs();
-            
-            double maxValue = outputs.get(0);
-            int maxIndex = 0;
-            for (int j = 0; j < outputs.size(); j++) {
-                if(outputs.get(j).isNaN()) System.out.println("Linha " + inputs.get(i));
-                if (outputs.get(j) > maxValue) {
-                    maxValue = outputs.get(j);
-                    maxIndex = j;
+    /**
+     * Realiza o processo de treinamento da rede com as instancias do parametro
+     *
+     * @param instancias instancias utilizadas para o treinamento
+     */
+    public void treinamento(Attributes attributes) {
+        boolean houveErro;
+        double maiorErro;
+        attributes.definirSaidasClasses(funçãoPropagação);
+        for (int i = 0; i < numIteraçõesLimite; i++) {
+            houveErro = false;
+            double erroAtual;
+            for (int j = 0; j < attributes.size(); j++) {
+                erroAtual = iteration(attributes.getAtributos(j), attributes.getSaida(j));
+                if (erroAtual > limiar) {
+                    houveErro = true;
                 }
             }
-            confusionMatrix[maxIndex][classeDesejada.get(i)-1] += 1;
+            if (!houveErro) {
+                return;
+            }
         }
 
-        return confusionMatrix;
+    }
+
+    /**
+     * Testa a rede com o conjunto do parametro e retorna a matriz de confusão
+     *
+     * @param instancias conjunto de testes
+     * @return matriz de confusão
+     */
+    public int[][] testarRede(Attributes attributes) {
+        int numClasses = attributes.getNumClasses();
+        attributes.definirSaidasClasses(funçãoPropagação);
+        int[][] matrizConfusão = new int[numClasses][numClasses];
+        for (int i = 0; i < numClasses; i++) {
+            for (int j = 0; j < numClasses; j++) {
+                matrizConfusão[i][j] = 0;
+            }
+        }
+        for (int i = 0; i < attributes.size(); i++) {
+            double[] saida = feedFoward(attributes.getAtributos(i));
+            int classeCalculada = indexMaiorSinalSaida(saida);
+            int classeDesejada = attributes.getIndexClasse(i);
+            matrizConfusão[classeCalculada][classeDesejada]++;
+        }
+        return matrizConfusão;
+    }
+
+    /**
+     * Processo de backpropagation da rede
+     *
+     * @param outputs Saida calculada no final do processo feedFoward
+     * @param outputEsperado Saida esperada pela rede
+     */
+    public void backPropagation(double[] outputs, Double[] outputEsperado) {
+        saida.calculaErros(outputEsperado);
+        oculta[oculta.length - 1].calculaErros(saida);
+        for (int i = oculta.length - 2; i >= 0; i--) {
+            oculta[i].calculaErros(oculta[i + 1]);
+        }
+        saida.ajustarPesos(taxaAprendizado);
+        for (int i = 0; i < oculta.length; i++) {
+            oculta[i].ajustarPesos(taxaAprendizado);
+        }
+    }
+
+    /**
+     * @return Retorna o erro da rede para a iteração atual
+     */
+    private double erroRede() {
+        return saida.erroRede();
+    }
+
+    /**
+     * Verifica em qual indice se encontra a maior valor na saida da rede
+     *
+     * @param saida
+     * @return
+     */
+    private int indexMaiorSinalSaida(double[] saida) {
+        int pos = 0;
+        double maior = Integer.MIN_VALUE;
+        for (int i = 0; i < saida.length; i++) {
+            if (maior < saida[i]) {
+                maior = saida[i];
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    /**
+     * Retorna os pesos de um neuronio
+     *
+     * @param camada indice da camada
+     * @param neuronio indice do neuronio
+     * @return
+     */
+    public double[] getPesos(int camada, int neuronio) {
+        if (oculta.length == camada) {
+            return saida.getPesos(neuronio);
+        }
+        return oculta[camada].getPesos(neuronio);
+    }
+
+    public double getTaxaAprendizado() {
+        return taxaAprendizado;
+    }
+
+    public void setTaxaAprendizado(double taxaAprendizado) {
+        this.taxaAprendizado = taxaAprendizado;
+    }
+
+    public int getNumIteraçõesLimite() {
+        return numIteraçõesLimite;
+    }
+
+    public void setNumIteraçõesLimite(int numIteraçõesLimite) {
+        this.numIteraçõesLimite = numIteraçõesLimite;
+    }
+
+    public double getLimiar() {
+        return limiar;
+    }
+
+    public void setLimiar(double limiar) {
+        this.limiar = limiar;
     }
 
 }

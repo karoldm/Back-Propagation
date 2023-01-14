@@ -1,8 +1,8 @@
 package com.mycompany.rn.project;
 
 import java.io.File;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,8 +14,23 @@ public class Form extends javax.swing.JFrame {
     /**
      * Creates new form Form
      */
-    NeuralNetwork NN;
-    ArrayList<ArrayList<Double>> matrixAttributesTest;
+    double[][] matrixAttributesTest;
+    private Attributes treinamento = null;
+    private Attributes teste = null;
+    private NeuralNetwork rede;
+
+    private int numNeuroniosEntrada;
+    private int numNeuroniosSaida;
+    private int numNeuroniosOcultos;
+    private int numCamadasOcultas;
+
+    public NeuralNetwork getRede() {
+        return rede;
+    }
+
+    public void setRede(NeuralNetwork rede) {
+        this.rede = rede;
+    }
 
     public Form() {
         initComponents();
@@ -24,8 +39,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTest.setEnabled(false);
         RadioButtonLogistic.setSelected(true);
         RadioButtonMaxError.setSelected(true);
-        NN = null;
-        matrixAttributesTest = new ArrayList<>();
     }
 
     /**
@@ -73,17 +86,16 @@ public class Form extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(453, 600));
         setPreferredSize(new java.awt.Dimension(453, 556));
-        setSize(new java.awt.Dimension(453, 600));
+        setSize(new java.awt.Dimension(475, 586));
 
         Panel.setBackground(new java.awt.Color(255, 255, 255));
-        Panel.setPreferredSize(new java.awt.Dimension(453, 556));
+        Panel.setPreferredSize(new java.awt.Dimension(475, 586));
 
         jLabel19.setText("Escolha o arquivo de treinamento");
 
         ButtonChoseFile.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile.setText("Escolher Arquivo");
-        ButtonChoseFile.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile.setBorderPainted(false);
         ButtonChoseFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile.setPreferredSize(null);
@@ -99,7 +111,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTraining.setBackground(new java.awt.Color(51, 51, 255));
         ButtonInitTraining.setForeground(new java.awt.Color(255, 255, 255));
         ButtonInitTraining.setText("Iniciar treinamento");
-        ButtonInitTraining.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonInitTraining.setBorderPainted(false);
         ButtonInitTraining.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonInitTraining.setPreferredSize(null);
@@ -146,14 +157,14 @@ public class Form extends javax.swing.JFrame {
             }
         });
 
-        TextFieldMaxError.setText("0.001");
+        TextFieldMaxError.setText("0.0005");
         TextFieldMaxError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldMaxErrorActionPerformed(evt);
             }
         });
 
-        TextFieldNumberOfIterations.setText("500");
+        TextFieldNumberOfIterations.setText("2000");
         TextFieldNumberOfIterations.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldNumberOfIterationsActionPerformed(evt);
@@ -165,7 +176,6 @@ public class Form extends javax.swing.JFrame {
         ButtonChoseFile2.setBackground(new java.awt.Color(51, 51, 255));
         ButtonChoseFile2.setForeground(new java.awt.Color(255, 255, 255));
         ButtonChoseFile2.setText("Escolher Arquivo");
-        ButtonChoseFile2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonChoseFile2.setBorderPainted(false);
         ButtonChoseFile2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonChoseFile2.setPreferredSize(null);
@@ -210,7 +220,6 @@ public class Form extends javax.swing.JFrame {
         ButtonInitTest.setBackground(new java.awt.Color(255, 0, 0));
         ButtonInitTest.setForeground(new java.awt.Color(255, 255, 255));
         ButtonInitTest.setText("Testar");
-        ButtonInitTest.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ButtonInitTest.setBorderPainted(false);
         ButtonInitTest.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         ButtonInitTest.setPreferredSize(null);
@@ -229,7 +238,7 @@ public class Form extends javax.swing.JFrame {
 
         jLabel1.setText("Taxa de aprendizado");
 
-        TextFieldLearningRate.setText("0.35");
+        TextFieldLearningRate.setText("0.4");
         TextFieldLearningRate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TextFieldLearningRateActionPerformed(evt);
@@ -355,7 +364,7 @@ public class Form extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+            .addComponent(Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -379,13 +388,19 @@ public class Form extends javax.swing.JFrame {
             String filePath = file.getPath();
             LabelFileName.setText(fileName);
 
-            ArrayList<ArrayList<Double>> matrixAttributes = ReaderCSV.reader(filePath);
+            double[][] matrixAttributes = ReaderCSV.reader(filePath);
 
-            NN = new NeuralNetwork(matrixAttributes);
+            treinamento = new Attributes(matrixAttributes);
+            treinamento.embaralhar();
+            numNeuroniosEntrada = treinamento.getAttributeRow(0).atributos.length-1;
+            numNeuroniosSaida = treinamento.getNumClasses();
+            numNeuroniosOcultos = (int) Math.round(Math.sqrt(numNeuroniosEntrada * numNeuroniosSaida));
 
-            LabelAttributesAmount.setText(String.valueOf(NN.getAttributesAmount()));
-            LabelClassAmount.setText(String.valueOf(NN.getClassAmount()));
-            TextFieldOcultLayer.setText(String.valueOf(NN.calculateNeuronsOcultLayer()));
+            LabelAttributesAmount.setText(String.valueOf(numNeuroniosEntrada));
+            LabelClassAmount.setText(String.valueOf(numNeuroniosSaida));
+            TextFieldOcultLayer.setText(String.valueOf(numNeuroniosOcultos));
+
+            this.normalizar();
 
             ButtonInitTraining.setEnabled(true);
 
@@ -417,6 +432,8 @@ public class Form extends javax.swing.JFrame {
 
             matrixAttributesTest = ReaderCSV.reader(filePath);
 
+            teste = new Attributes(matrixAttributesTest);
+
             ButtonInitTest.setEnabled(true);
 
         } else {
@@ -429,33 +446,31 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_TextFieldNumberOfIterationsActionPerformed
 
     private void ButtonInitTrainingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTrainingActionPerformed
-        //definindo neuronios da camada oculta
-        int neuronsOcultLayer = Integer.parseInt(TextFieldOcultLayer.getText());
-        NN.setNeuronsOcultLayerAmount(neuronsOcultLayer);
-
-        //definindo função que será usada
-        if (RadioButtonLogistic.isSelected()) {
-            NN.setFunction(0);
+        if (TextFieldLearningRate.getText().isBlank()
+                || TextFieldMaxError.getText().isEmpty()
+                || TextFieldNumberOfIterations.getText().isEmpty()
+                || TextFieldOcultLayer.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.WARNING_MESSAGE);
         } else {
-            NN.setFunction(1);
+            int numNeuroniosCamadaOculta = Integer.parseInt(TextFieldOcultLayer.getText());
+            Function function = (RadioButtonTH.isSelected() ? new HyperbolicTangent() : new Logistic());
+
+            treinamento.definirSaidasClasses(function);
+
+            this.criarRedeNeural(1, numNeuroniosCamadaOculta, function);
+
+            double taxa = Double.parseDouble(TextFieldLearningRate.getText());
+            double erro = Double.parseDouble(TextFieldMaxError.getText());
+            int iteracoes = Integer.parseInt(TextFieldNumberOfIterations.getText());
+
+            this.getRede().setTaxaAprendizado(taxa);
+            this.getRede().setLimiar(erro);
+            this.getRede().setNumIteraçõesLimite(iteracoes);
+            this.treinarRede();
+
+            //Quanto o treinamento estiver completo habilitamos os botões para teste
+            ButtonChoseFile2.setEnabled(true);
         }
-
-        //definindo condição de parada
-        if (RadioButtonMaxError.isSelected()) {
-            NN.setStop(0);
-            NN.setStopNumber(Double.parseDouble(TextFieldMaxError.getText()));
-        } else {
-            NN.setStop(1);
-            NN.setStopNumber(Integer.parseInt(TextFieldNumberOfIterations.getText()));
-        }
-
-        NN.setLearningRate(Double.parseDouble(TextFieldLearningRate.getText()));
-
-        //Iniciando treinamento
-        NN.initTraining();
-
-        //Quanto o treinamento estiver completo habilitamos os botões para teste
-        ButtonChoseFile2.setEnabled(true);
     }//GEN-LAST:event_ButtonInitTrainingActionPerformed
 
     private void ButtonInitTraining1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTraining1ActionPerformed
@@ -475,21 +490,36 @@ public class Form extends javax.swing.JFrame {
     }//GEN-LAST:event_RadioButtonMaxErrorActionPerformed
 
     private void ButtonInitTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonInitTestActionPerformed
-        int[][] confusionMatrix = NN.test(matrixAttributesTest);
+        int[][] confusionMatrix = rede.testarRede(teste);
 
         DefaultTableModel model = (DefaultTableModel) Table.getModel();
-        for(int i = 0; i < confusionMatrix.length; i++){
+        for (int i = 0; i < confusionMatrix.length; i++) {
             model.removeRow(0);
         }
-        
-        for(int i = 0; i < confusionMatrix.length; i++){
+
+        for (int i = 0; i < confusionMatrix.length; i++) {
             Object[] row = new Object[confusionMatrix.length];
-            for(int j = 0; j < confusionMatrix.length; j++){
-                row[j] = (Object)confusionMatrix[i][j];
+            for (int j = 0; j < confusionMatrix.length; j++) {
+                row[j] = (Object) confusionMatrix[i][j];
             }
             model.addRow(row);
         }
     }//GEN-LAST:event_ButtonInitTestActionPerformed
+
+    public void treinarRede() {
+        treinamento.embaralhar();
+        rede.treinamento(treinamento);
+    }
+
+    private void normalizar() {
+        treinamento.normalizar(0, 1, teste);
+    }
+
+    public void criarRedeNeural(int numeroCamadasOcultas, int numeroNeuronicosCamadaOculta, Function f) {
+        rede = new NeuralNetwork(numNeuroniosEntrada, numeroNeuronicosCamadaOculta, numeroCamadasOcultas, numNeuroniosSaida, f);
+        this.numCamadasOcultas = numeroCamadasOcultas;
+        this.numNeuroniosOcultos = numeroNeuronicosCamadaOculta;
+    }
 
     private void TextFieldLearningRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldLearningRateActionPerformed
         // TODO add your handling code here:
